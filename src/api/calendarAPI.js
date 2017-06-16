@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const baseUrl = 'http://timemap-server.us-west-2.elasticbeanstalk.com/api';
+const baseUrl = 'http://timemap.us-west-2.elasticbeanstalk.com/api';
 
 export function addEvent(event) {
     let url = `${baseUrl}/events`;
