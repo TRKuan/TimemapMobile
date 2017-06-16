@@ -1,45 +1,72 @@
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import React from 'react';
+import {BackHandler} from 'react-native';
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
+
+import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import loggerMiddleware from 'redux-logger';
+import {Provider, connect} from 'react-redux';
+
+import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
+import Today from './components/Today.js';
+import Calendar from './components/Calendar.js';
+
+const AppNavigator = StackNavigator({
+    Today: {screen: Today},
+    Calendar: {screen: Calendar}
+}, {
+    headerMode: 'none'
+});
+
+class AppWithStyleAndNavigator extends React.Component {
+    render() {
+        return (
+            //<StyleProvider style={getTheme(platform)}>
+                <AppNavigator navigation={addNavigationHelpers({
+                    dispatch: this.props.dispatch,
+                    state: this.props.nav,
+                })}/>
+            //</StyleProvider>
+        );
+    }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            const {dispatch, nav} = this.props;
+            if (nav.index === 0)
+                return false;
+            dispatch(NavigationActions.back());
+            return true;
+        });
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress');
+    }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+const AppWithNavState = connect(state => ({
+    nav: state.nav
+}))(AppWithStyleAndNavigator);
+
+// Nav reducer
+const initialState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: 'Today'}));
+const nav = (state = initialState, action) => {
+    const nextState = AppNavigator.router.getStateForAction(action, state);
+    return nextState || state;
+};
+
+// Create Redux store
+const store = createStore(combineReducers({
+    nav
+}), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
+
+export default class App extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <AppWithNavState/>
+            </Provider>
+        );
+    }
+}
