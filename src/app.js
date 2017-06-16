@@ -6,6 +6,11 @@ import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
+import {calendar} from './states/calendar-reducers.js';
+import {map} from './states/map-reducers.js';
+import {main} from './states/main-client-reducers.js';
+import {todayNextEvent} from './states/today-reducers.js';
+import {eventsForm} from './states/events-form-reducers.js';
 
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
@@ -58,6 +63,11 @@ const nav = (state = initialState, action) => {
 
 // Create Redux store
 const store = createStore(combineReducers({
+    calendar,
+    map,
+    main,
+    todayNextEvent,
+    eventsForm,
     nav
 }), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
 
