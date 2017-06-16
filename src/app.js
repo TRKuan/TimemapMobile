@@ -12,6 +12,8 @@ import {main} from './states/main-client-reducers.js';
 import {todayNextEvent} from './states/today-reducers.js';
 import {eventsForm} from './states/events-form-reducers.js';
 
+import {initCalendar, setUserId} from './states/calendar-actions';
+
 import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
@@ -24,6 +26,16 @@ const AppNavigator = StackNavigator({
 });
 
 class AppWithStyleAndNavigator extends React.Component {
+    constructor(props) {
+        super(props);
+        this.props.dispatch(setUserId('1234'));
+
+    }
+
+    componentWillMount() {
+        this.props.dispatch(initCalendar());
+    }
+
     render() {
         return (
             //<StyleProvider style={getTheme(platform)}>
