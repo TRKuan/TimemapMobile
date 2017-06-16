@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {initMap} from './map-actions.js'
 import {getDirection as getDirectionFormAPI} from '../api/mapboxAPI.js';
-import {addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from 'api/calendarAPI.js';
+import {addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
 
 export function initCalendar() {
     return (dispatch) => {
