@@ -20,6 +20,8 @@ class Map extends Component {
                 initialZoomLevel={14}
                 initialCenterCoordinate={{latitude: 120.9917471227813, longitude: 24.79567369463787}}
                 rotateEnabled={false}
+                scrollEnabled={false}
+                zoomEnabled={false}
                 pitchEnabled={false}
                 showsUserLocation={true}
                 userTrackingMode={Mapbox.userTrackingMode.follow}
