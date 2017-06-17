@@ -41,6 +41,18 @@ class Map extends Component {
         if(this.props.showNextEvent&&nextProps.nextEvent!=this.props.nextEvent){
             this.updateNextEventMarker(nextProps.nextEvent);
         }
+        if(this.props.currentPosition&&nextProps.nextEvent)
+            if(nextProps.nextEvent.lat)
+                this.map.setVisibleCoordinateBounds(
+                    Math.min(this.props.currentPosition.latitude, nextProps.nextEvent.lat),
+                    Math.min(this.props.currentPosition.longitude, nextProps.nextEvent.lng),
+                    Math.max(this.props.currentPosition.latitude, nextProps.nextEvent.lat),
+                    Math.max(this.props.currentPosition.longitude, nextProps.nextEvent.lng),
+                    100,
+                    100,
+                    100,
+                    100
+                );
 
     }
 
@@ -56,10 +68,11 @@ class Map extends Component {
                 zoomEnabled={this.props.pinable}
                 pitchEnabled={this.props.pinable}
                 showsUserLocation={true}
-                userTrackingMode={Mapbox.userTrackingMode.follow}
+                userTrackingMode={Mapbox.userTrackingMode.none}
                 logoIsHidden={true}
                 onTap={this.props.pinable?(e) => this.onTap(e):null}
                 annotations={this.state.annotations}
+                annotationsAreImmutable={true}
             />
         );
     }
