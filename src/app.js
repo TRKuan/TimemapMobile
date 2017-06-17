@@ -17,11 +17,25 @@ import {initCalendar, setUserId} from './states/calendar-actions';
 import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
+import theme from './theme.js'
 
 const AppNavigator = TabNavigator({
     Today: {screen: Today},
     Calendar: {screen: Calendar}
-});
+}, {
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+        activeTintColor: theme.themeColorLight,
+        indicatorStyle: {
+            backgroundColor: theme.themeColorLight
+        },
+        style: {
+            backgroundColor: theme.themeColorDark
+        }
+    },
+    initialRouteName: 'Today'
+}
+);
 
 class AppWithStyleAndNavigator extends React.Component {
     constructor(props) {
