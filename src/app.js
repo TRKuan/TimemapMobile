@@ -42,7 +42,7 @@ const AppNavigator = TabNavigator({
 class AppWithStyleAndNavigator extends React.Component {
     constructor(props) {
         super(props);
-        this.props.dispatch(setUserId('6cae9af5-957b-47c9-b681-aa2c75f27eea'));
+        this.props.dispatch(setUserId('f4caed83-0067-4d10-b581-05ad09fa9234'));
 
     }
 
@@ -95,7 +95,7 @@ const store = createStore(combineReducers({
     todayNextEvent,
     eventsForm,
     nav
-}), compose(applyMiddleware(thunkMiddleware, loggerMiddleware)));
+}), compose(applyMiddleware(thunkMiddleware/*, loggerMiddleware*/)));
 
 export default class App extends React.Component {
     render() {

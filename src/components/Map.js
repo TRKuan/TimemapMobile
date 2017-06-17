@@ -11,18 +11,37 @@ class Map extends Component {
         super(props);
         Mapbox.setAccessToken(this.props.accessToken);
         this.map = null;
+        let annotations = [];
+        annotations.push({
+            coordinates: [91, 181],
+            type: 'point',
+            annotationImage: {
+              source: { uri: 'https://cldup.com/9Lp0EaBw5s.png' },
+              height: 25,
+              width: 25
+            },
+            id: 'pinMarker'
+        });
+        annotations.push({
+            coordinates: [91, 181],
+            type: 'point',
+            annotationImage: {
+              source: { uri: 'https://cldup.com/9Lp0EaBw5s.png' },
+              height: 25,
+              width: 25
+            },
+            id: 'nextMarker'
+        });
         this.state = {
-            annotations: [{
-                coordinates: [91, 181],
-                type: 'point',
-                annotationImage: {
-                  source: { uri: 'https://cldup.com/9Lp0EaBw5s.png' },
-                  height: 25,
-                  width: 25
-                },
-                id: 'pinMarker'
-            }]
+            annotations
+        };
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(this.props.showNextEvent&&nextProps.nextEvent!=this.props.nextEvent){
+            this.updateNextEventMarker(nextProps.nextEvent);
         }
+
     }
 
     render() {
@@ -40,24 +59,44 @@ class Map extends Component {
                 userTrackingMode={Mapbox.userTrackingMode.follow}
                 logoIsHidden={true}
                 onTap={this.props.pinable?(e) => this.onTap(e):null}
-                annotations={this.props.pinable?this.state.annotations:[]}
+                annotations={this.state.annotations}
             />
         );
     }
 
     onTap(e){
         this.props.dispatch(setPinPosition({latitude: e.latitude, longitude: e.longitude}));
+        this.setPinMarker(e.latitude, e.longitude);
+    }
+
+    setPinMarker(latitude, longitude){
+        let annotations = this.state.annotations.map((value) => {
+            let tmp = JSON.parse(JSON.stringify(value));
+            if(value.id === 'pinMarker')
+                tmp.coordinates = [latitude, longitude];
+            return tmp;
+        });
         this.setState({
-            annotations: [{
-                coordinates: [e.latitude, e.longitude],
-                type: 'point',
-                annotationImage: {
-                  source: { uri: 'https://cldup.com/9Lp0EaBw5s.png' },
-                  height: 25,
-                  width: 25
-                },
-                id: 'pinMarker'
-            }]
+            annotations
+        });
+    }
+
+    updateNextEventMarker(nextEvent){
+        let annotations = this.state.annotations.map((value) => {
+            let tmp = JSON.parse(JSON.stringify(value));
+            if(value.id === 'nextMarker'){
+                if(nextEvent){
+                    if(nextEvent.lat){
+                        tmp.coordinates = [nextEvent.lat, nextEvent.lng];
+                        return tmp;
+                    }
+                }
+            }
+            tmp.coordinates = [91, 181];
+            return tmp;
+        });
+        this.setState({
+            annotations
         });
     }
 

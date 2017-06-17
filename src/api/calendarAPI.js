@@ -96,7 +96,9 @@ export function getNextEvent(userId) {
     }).then((res) => {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
-        return res.json()[0];
+        return res.json();
+    }).then((array) => {
+        return array[0];
     });
 }
 
