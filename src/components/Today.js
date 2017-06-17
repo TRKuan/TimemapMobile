@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
-  Button
+  View
 } from 'react-native';
+import {connect} from 'react-redux';
+import Map from './Map.js';
 
 export default class Today extends Component {
     static navigationOptions = {
@@ -15,8 +16,9 @@ export default class Today extends Component {
         const {navigate} = this.props.navigation;
         return (
           <View style={styles.container}>
-            <Text>Today</Text>
-            <Button title="Calendar" onPress={() => navigate('Calendar')} />
+            <View style={{height:"50%", width:"100%"}}>
+              <Map pinable={false} showNextEvent={true}/>
+            </View>
           </View>
         );
     }

@@ -68,9 +68,9 @@ function watchCurrentPosition(){
     return (dispatch, getState) => {
         navigator.geolocation.clearWatch(getState().map.watchID);
         let watchID = navigator.geolocation.watchPosition((position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            dispatch(updateCurrentPosition({lng, lat}));
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            dispatch(updateCurrentPosition({longitude, latitude}));
             dispatch(updateNextEvent());
         }, () => {
             console.error("watchPosition error");
@@ -92,11 +92,11 @@ export function getCurrentPosition(){
         dispatch(getCurrentPositionStart());
         return new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition((position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                dispatch(getCurrentPositionEnd({lng, lat}));
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                dispatch(getCurrentPositionEnd({longitude, latitude}));
                 dispatch(watchCurrentPosition());
-                resolve({lng, lat});
+                resolve({longitude, latitude});
             }, (error) => reject(error));
         });
     };
