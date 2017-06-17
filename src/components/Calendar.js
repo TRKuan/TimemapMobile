@@ -11,6 +11,7 @@ import {
   Row
 } from 'native-base';
 
+import CalendarMonthDay from './CalendarMonthDay.js';
 
 export default class Calendar extends Component {
   static navigationOptions = {
@@ -41,18 +42,18 @@ export default class Calendar extends Component {
     );
     let week = (
         <Row >
-            {day}
-            {day}
-            {day}
-            {day}
-            {day}
-            {day}
-            {day}
+            <CalendarMonthDay />
+            <CalendarMonthDay />
+            <CalendarMonthDay />
+            <CalendarMonthDay />
+            <CalendarMonthDay />
+            <CalendarMonthDay />
+            <CalendarMonthDay />
         </Row>
     );
 
     return (
-      <Container>
+      <Container style={{backgroundColor: "#F5FCFF"}}>
         <Col size={1} style={styles.calendarHeader}>
           <Row size={3} style={styles.calendarMonthYearDisplay}>
             <Text style={[styles.calendarMonthText, styles.lightColorText]}>
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   lightColorText: {
-    color: "#fff",
+    color: "#F5FCFF",
   },
   darkColorText: {
     color: "#888",
