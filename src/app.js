@@ -17,11 +17,13 @@ import {initCalendar, setUserId} from './states/calendar-actions';
 import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
-import theme from './theme.js'
+import Settings from './components/Settings.js';
+import theme from './theme.js';
 
 const AppNavigator = TabNavigator({
     Today: {screen: Today},
-    Calendar: {screen: Calendar}
+    Calendar: {screen: Calendar},
+    Settings: {screen: Settings}
 }, {
     tabBarPosition: 'bottom',
     tabBarOptions: {
