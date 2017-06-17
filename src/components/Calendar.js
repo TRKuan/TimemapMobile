@@ -20,15 +20,37 @@ export default class Calendar extends Component {
   render() {
     let weekBar = (
       <Row size={1}>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Sun</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Mon</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Tue</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Wed</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Thu</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Fri</Text></Col>
-        <Col style={[styles.dayOfWeek, styles.border]}><Text style={styles.lightColorText}>Sat</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Sun</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Mon</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Tue</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Wed</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Thu</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Fri</Text></Col>
+        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Sat</Text></Col>
       </Row>
     );
+    //For static
+    let day = (
+        <Col style={styles.dayCell}>
+            <View style={styles.hasEventBar}>
+                <Text style={[styles.darkColorText]}>
+                    1
+                </Text>
+            </View>
+        </Col>
+    );
+    let week = (
+        <Row >
+            {day}
+            {day}
+            {day}
+            {day}
+            {day}
+            {day}
+            {day}
+        </Row>
+    );
+
     return (
       <Container>
         <Col size={1} style={styles.calendarHeader}>
@@ -40,7 +62,13 @@ export default class Calendar extends Component {
           {weekBar}
         </Col>
         <Col size={3}>
-            
+            {week}
+            {week}
+            {week}
+            {week}
+            {week}
+            {week}
+
         </Col>
       </Container>
     );
@@ -53,6 +81,9 @@ const styles = StyleSheet.create({
   },
   lightColorText: {
     color: "#fff",
+  },
+  darkColorText: {
+    color: "#888",
   },
   container: {
     flex: 1,
@@ -76,5 +107,15 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  dayCell: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  hasEventBar: {
+      borderBottomWidth: 5,
+      borderColor: "#17dfab",
+      paddingTop: 4,
+      paddingBottom: 2
   }
 });
