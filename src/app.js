@@ -25,7 +25,7 @@ const AppNavigator = TabNavigator({
     Calendar: {screen: Calendar},
     Settings: {screen: Settings}
 }, {
-    tabBarPosition: 'bottom',
+    tabBarPosition: 'top',
     tabBarOptions: {
         activeTintColor: theme.themeColorLight,
         indicatorStyle: {
