@@ -38,9 +38,9 @@ export default class CalendarMonthDay extends Component {
   render() {
 
     return (
-      <TouchableWithoutFeedback onPress={this.onPressDay}>
-        <View style={[styles.dayCell, {backgroundColor: this.state.backColor, flex: 1, flexDirection: 'row', borderWidth: 1}]}>
-              <View style={[styles.hasEventBar, {borderColor: this.state.hasEventBorder}]}>
+      <TouchableWithoutFeedback onPress={this.onPressDay} style={[/*styles.border*/]}>
+        <View style={[styles.dayCell, {backgroundColor: this.state.backColor, flex: 1, flexDirection: 'row'}, /*styles.border*/]}>
+              <View style={[styles.hasEventBar, {borderColor: this.state.hasEventBorder}, /*styles.border*/]}>
                   <Text style={[{color: this.state.dayColor}]}>
                       1
                   </Text>
@@ -69,6 +69,8 @@ const styles = StyleSheet.create({
   dayCell: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 5
   },
   hasEventBar: {
       borderBottomWidth: 5,
