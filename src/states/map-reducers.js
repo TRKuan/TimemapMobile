@@ -1,5 +1,5 @@
 const initMapState = {
-    accessToken: '',
+    accessToken: 'pk.eyJ1IjoidHJrdWFuIiwiYSI6ImNqMXlsYnE1ZjAwdHcyeHJxa3lrYWg2dHcifQ.tBkscd-d-S0Z374VcVw3Qg',
     currentPosition: null, //{lng, lat}
     watchID: null,
     pinPosition: null //{lng, lat}

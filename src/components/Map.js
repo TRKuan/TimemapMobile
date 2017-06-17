@@ -8,14 +8,25 @@ import {connect} from 'react-redux';
 class Map extends Component {
     constructor(props){
         super(props);
-        Mapbox.setAccessToken('pk.eyJ1IjoidHJrdWFuIiwiYSI6ImNqMXlsYnE1ZjAwdHcyeHJxa3lrYWg2dHcifQ.tBkscd-d-S0Z374VcVw3Qg');
+        Mapbox.setAccessToken(this.props.accessToken);
+        this.map = null;
     }
 
     render() {
         return (
-            <MapView style={styles.map} />
+            <MapView
+                style={styles.map}
+                ref={(map) => {this.map = map;}}
+                initialZoomLevel={14}
+                rotateEnabled={false}
+                pitchEnabled={false}
+                showsUserLocation={true}
+                userTrackingMode={Mapbox.userTrackingMode.follow}
+                logoIsHidden={true}
+            />
         );
     }
+
 }
 
 const styles = StyleSheet.create({
