@@ -49,10 +49,10 @@ export default class Settings extends Component {
   };
 
   // Handle Login with Facebook button tap
-  loginWithFacebook = () => this.openURL('http://localhost:3000/auth/facebook');
+  loginWithFacebook = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/facebook');
 
   // Handle Login with Google button tap
-  loginWithGoogle = () => this.openURL('http://10.0.2.2:3000/auth/google');
+  loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google/');
 
   // Open URL in a browser
   openURL = (url) => {
