@@ -18,6 +18,7 @@ class Map extends Component {
                 style={styles.map}
                 ref={(map) => {this.map = map;}}
                 initialZoomLevel={14}
+                initialCenterCoordinate={{latitude: 120.9917471227813, longitude: 24.79567369463787}}
                 rotateEnabled={false}
                 pitchEnabled={false}
                 showsUserLocation={true}
