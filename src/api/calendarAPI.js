@@ -20,7 +20,7 @@ export function addEvent(event) {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }
 
@@ -42,7 +42,7 @@ export function setEvent(event, eventID) {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }
 
@@ -62,7 +62,7 @@ export function getDay(userId, year, month, day) {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }
 
@@ -80,7 +80,7 @@ export function getMonth(userId, year, month) {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }
 
@@ -96,7 +96,7 @@ export function getNextEvent(userId) {
     }).then((res) => {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
-        return res.data[0];
+        return res.json()[0];
     });
 }
 
@@ -113,6 +113,6 @@ export function getEvent(userId) {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }

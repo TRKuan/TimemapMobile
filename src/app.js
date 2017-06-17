@@ -28,7 +28,7 @@ const AppNavigator = StackNavigator({
 class AppWithStyleAndNavigator extends React.Component {
     constructor(props) {
         super(props);
-        this.props.dispatch(setUserId('1234'));
+        this.props.dispatch(setUserId('6cae9af5-957b-47c9-b681-aa2c75f27eea'));
 
     }
 

@@ -7,10 +7,10 @@ export function getDirection(coords1, coords2, profile, accessToken){
             'Accept': 'application/json'
         }
     }).then((res) => {
-        if(res.data.code !== "Ok")throw Error("Mapbox Direaction error");
+        if(res.json().code !== "Ok")throw Error("Mapbox Direaction error");
         return {
-            duration: res.data.routes[0].duration,
-            distance: res.data.routes[0].distance
+            duration: res.json().routes[0].duration,
+            distance: res.json().routes[0].distance
         };
     }).catch((err) => {
         throw err;
@@ -30,6 +30,6 @@ export function getAccessToken() {
         if (res.status !== 200)
             throw new Error(`Unexpected response code: ${res.status}`);
 
-        return res.data;
+        return res.json();
     });
 }
