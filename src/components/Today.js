@@ -17,7 +17,7 @@ export default class Today extends Component {
         return (
           <View style={styles.container}>
             <View style={{height:"50%", width:"100%"}}>
-              <Map />
+              <Map pinable={false}/>
             </View>
           </View>
         );
