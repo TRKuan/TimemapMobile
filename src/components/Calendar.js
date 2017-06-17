@@ -6,6 +6,10 @@ import {
 } from 'react-native';
 
 export default class Calendar extends Component {
+  static navigationOptions = {
+    tabBarLabel: 'Calendar'
+  };
+
   render() {
     return (
       <View style={styles.container}>

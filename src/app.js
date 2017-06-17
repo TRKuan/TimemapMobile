@@ -14,15 +14,13 @@ import {eventsForm} from './states/events-form-reducers.js';
 
 import {initCalendar, setUserId} from './states/calendar-actions';
 
-import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
+import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
 
-const AppNavigator = StackNavigator({
+const AppNavigator = TabNavigator({
     Today: {screen: Today},
     Calendar: {screen: Calendar}
-}, {
-    headerMode: 'none'
 });
 
 class AppWithStyleAndNavigator extends React.Component {

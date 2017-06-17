@@ -7,6 +7,10 @@ import {
 } from 'react-native';
 
 export default class Today extends Component {
+    static navigationOptions = {
+      tabBarLabel: 'Home'
+    };
+
     render() {
         const {navigate} = this.props.navigation;
         return (
