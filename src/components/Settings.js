@@ -6,6 +6,7 @@ import {
   View,
   Button
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Settings extends Component {
   static navigationOptions = {
@@ -64,7 +65,10 @@ export default class Settings extends Component {
     return (
       <View style={styles.container}>
         <Text>Settings</Text>
-        <Button title="Login" onPress={this.loginWithGoogle} />
+        <Icon.Button name="google"
+        backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
+          Login with google
+        </Icon.Button>
       </View>
     );
   }
