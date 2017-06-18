@@ -3,7 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  ListView
+  ListView,
+  TouchableOpacity,
+  Button,
+  Dimensions,
+  ListItem,
+  ScrollView
 } from 'react-native';
 import {
   Container,
@@ -12,8 +17,18 @@ import {
   Row
 } from 'native-base';
 
+var {
+  height: deviceHeight
+} = Dimensions.get('window');
+
+//import Modal from 'react-native-modal';
+import Modal from 'react-native-simple-modal';
+
+
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
-import {CalendarList, Agenda, Calendar as CalendarFromNPM} from 'react-native-calendars';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import {CalendarList, Calendar as CalendarFromNPM} from 'react-native-calendars';
 
 import CalendarMonthDay from './CalendarMonthDay.js';
 import CalendarMonthWeek from './CalendarMonthWeek.js';
@@ -29,15 +44,23 @@ export default class Calendar extends Component {
       dataSource: ds.cloneWithRows(['row 1', 'row 2', 'row 3'/*, 'row 4', 'row 5', 'row 6', 'row 7', 'row 8', 'row 9', 'row 2', 'row 10', 'row 11', 'row 12', 'row 13','row 14', 'row 15', 'row 16', 'row 17', 'row 18', 'row 19', 'row 20','row 21', 'row 22', 'row 23', 'row 24', 'row 25', 'row 26', 'row 27'*/]),
       canLoadMoreContent: true,
       currentMonth: 'June',
-      showAgenda: false,
       selected: '2017-06-18',
       markedDays: {
         '2017-06-18': {marked: true, selected: true},
-        '2017-06-30': {marked: true}
-      }
-    };
+        '2017-06-30': {marked: true},
+        '2017-07-30': {marked: true},
+      },
+      isModalVisible: false,
+      offset: 0
+    }
+
     this.onDayPress = this.onDayPress.bind(this);
   }
+
+  _showModal = () => this.setState({ isModalVisible: true })
+
+  _hideModal = () => this.setState({ isModalVisible: false })
+
   loadMoreContentAsync = async () =>{
     this.setState({
       items: {},
@@ -45,6 +68,7 @@ export default class Calendar extends Component {
     });
   }
   onDayPress(day) {
+
     let tempMarked = {};
     for(i in this.state.markedDays){
       tempMarked[i] = this.state.markedDays[i];
@@ -72,7 +96,7 @@ export default class Calendar extends Component {
       selected: day.dateString,
       markedDays: tempMarked
     });
-
+    this._showModal();
   }
   render() {
     const weekBar = (
@@ -119,46 +143,138 @@ export default class Calendar extends Component {
         </Col>
       </Container>
     );
+    const calendarList = (
+      <CalendarList
+        theme={{
+        calendarBackground: '#F5FCFF',
+        textSectionTitleColor: '#bbb',
+        selectedDayBackgroundColor: '#17dfab',
+        selectedDayTextColor: '#ffffff',
+        todayTextColor: '#17dfab',
+        dayTextColor: '#888',
+        textDisabledColor: '#eee',
+        dotColor: '#17dfab',
+        selectedDotColor: '#ffffff',
+        arrowColor: '#17dfab',
+        monthTextColor: '#17dfab'
+      }}
+
+      onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
+      onDayPress={this.onDayPress}
+      style={styles.calendar}
+      markedDates={this.state.markedDays}
+    />
+    );
+    const CalendarListAndModal = (
+      <Modal
+        isVisible={this.state.isModalVisible}
+        animationIn={'zoomInDown'}
+        animationOut={'zoomOutUp'}
+        hideOnBack={true}
+      >
+        <View style={{ flex: 1}}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayHeaderText}>June 18, 2017</Text>
+          </View>
+        </View>
+        <View style={{ flex: 3}}>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+          <View style={styles.item}>
+            <View style={styles.eventName}><Text>Event</Text></View>
+            <View style={styles.eventTime}><Text>Location</Text></View>
+            <View style={styles.eventLocation}><Text>Time</Text></View>
+          </View>
+        </View>
+        <Button title='Hide' onPress={this._hideModal}>
+          <Text>Hide Modal</Text>
+        </Button>
+      </Modal>
+    );
+    const eventItem = (
+      <View style={styles.item}>
+        <View style={styles.eventName}><Text>Event</Text></View>
+        <View style={styles.eventTime}><Text>Location</Text></View>
+        <View style={styles.eventLocation}><Text>Time</Text></View>
+      </View>
+    );
 
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1}}>
+        {calendarList}
+        <Modal
+        offset={this.state.offset}
+        open={this.state.isModalVisible}
+        modalDidOpen={() => console.log('modal did open')}
+        modalDidClose={this._hideModal}
+        modalStyle={{padding: 0, borderRadius: 5}}>
+          <View style={{padding: 0, height: 80}}>
+            <View style={styles.dayHeader}>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View>
+                  <Text style={styles.eventsText}>Events</Text>
+                  <Text style={styles.dayHeaderText}>June 18, 2017</Text>
+                </View>
+                <View style={{ justifyContent: 'center', marginRight: 15}}>
+                  <TouchableOpacity onPress={() => this.setState({isModalVisible: false})}>
+                    <Icon name="plus"
+                    color='#fff'
+                    title="add"
+                    size={20}
+                    >
+                    </Icon>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
+            </View>
+          </View>
+          <ScrollView style={{maxHeight: 390}}>
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+            {eventItem}
+          </ScrollView>
 
-
-          <CalendarList
-            theme={{
-            calendarBackground: '#F5FCFF',
-            textSectionTitleColor: '#bbb',
-            selectedDayBackgroundColor: '#17dfab',
-            selectedDayTextColor: '#ffffff',
-            todayTextColor: '#17dfab',
-            dayTextColor: '#888',
-            textDisabledColor: '#eee',
-            dotColor: '#17dfab',
-            selectedDotColor: '#ffffff',
-            arrowColor: '#17dfab',
-            monthTextColor: '#17dfab'
-          }}
-          displayLoadingIndicator
-          onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
-          onDayPress={this.onDayPress}
-          style={styles.calendar}
-          markedDates={this.state.markedDays}
-        />
-        <Text>
-          {this.state.currentMonths}
-        </Text>
-
+        </Modal>
 
 
       </View>
 
 
-
-
     );
   }
-
 
 }
 
@@ -219,4 +335,48 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#eee'
   },
+  item: {
+   backgroundColor: '#F5FCFF',
+   height: 60,
+   borderColor: '#ccc',
+   borderBottomWidth: 1,
+   flexDirection: 'row',
+   alignItems: 'center',
+   padding: 15,
+   margin: 2,
+   marginRight: 5,
+   marginLeft: 5
+ },
+ emptyDate: {
+   height: 15,
+   flex:1,
+   paddingTop: 30
+ },
+ dayHeader: {
+    flex: 1,
+    backgroundColor: '#17dfab',
+    padding: 15,
+    paddingLeft: 20,
+    borderRadius: 4,
+    height: 80,
+    marginBottom: 2
+ },
+ eventsText:{
+   color: '#fff',
+   fontSize: 16,
+
+ },
+ dayHeaderText: {
+   color: '#fff',
+   fontSize: 22,
+ },
+ eventName:{
+   flex: 1,
+ },
+ eventTime:{
+   flex: 1
+ },
+ eventLocation:{
+   flex: 1
+ }
 });
