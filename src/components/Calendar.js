@@ -5,6 +5,7 @@ import {
   View,
   ScrollView
 } from 'react-native';
+import { Fab, Button, Container } from 'native-base';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-simple-modal';
@@ -19,7 +20,6 @@ export default class Calendar extends Component {
     super(props);
 
     this.state = {
-      currentMonth: 'June',
       selected: '2017-06-18',
       markedDays: {
         '2017-06-18': {marked: true, selected: true},
@@ -27,6 +27,7 @@ export default class Calendar extends Component {
         '2017-07-30': {marked: true},
       },
       isModalVisible: false,
+      fabActive: false,
     }
     this.onDayPress = this.onDayPress.bind(this);
   }
@@ -91,18 +92,28 @@ export default class Calendar extends Component {
 
     return (
       <View style={{ flex: 1}}>
-        {calendarList}
-        <Modal
-        offset={this.state.offset}
-        animationDuration={600}
-	      animationTension={30}
-        overlayBackground={'rgba(0, 0, 0, 0.6)'}
-        open={this.state.isModalVisible}
-        modalDidOpen={() => console.log('modal did open')}
-        modalDidClose={this._hideModal}
-        modalStyle={{padding: 0, borderRadius: 5}}>
-          <EventsListModal date={this.state.selected}/>
-        </Modal>
+        <Container>
+          <Fab
+              active={this.state.fabActive}
+              containerStyle={{ marginRight: 10 }}
+              style={{ backgroundColor: '#17dfab' }}
+              onPress={() => this.setState({ fabActive: !this.state.fabActive, isModalVisible: true })}>
+              <Icon name="plus" />
+          </Fab>
+          {calendarList}
+          <Modal
+          offset={this.state.offset}
+          animationDuration={600}
+  	      animationTension={30}
+          overlayBackground={'rgba(0, 0, 0, 0.6)'}
+          open={this.state.isModalVisible}
+          modalDidOpen={() => console.log('modal did open')}
+          modalDidClose={this._hideModal}
+          modalStyle={{padding: 0, borderRadius: 5}}>
+            <EventsListModal date={this.state.selected}/>
+          </Modal>
+        </Container>
+
       </View>
 
     );

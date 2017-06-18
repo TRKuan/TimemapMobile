@@ -19,9 +19,9 @@ class EventItem extends Component {
 
     return (
       <View style={styles.item}>
-        <View style={styles.eventName}><Text>{this.props.title}</Text></View>
-        <View style={styles.eventTime}><Text>&nbsp;&nbsp;{startTime}</Text></View>
-        <View style={styles.eventLocation}><Text>{this.props.location}</Text></View>
+        <View style={styles.eventName}><Text style={styles.darkColorText}>{this.props.title}</Text></View>
+        <View style={styles.eventTime}><Text style={styles.darkColorText}>&nbsp;&nbsp;{startTime}</Text></View>
+        <View style={styles.eventLocation}><Text style={styles.darkColorText}>{this.props.location}</Text></View>
       </View>
     );
   }

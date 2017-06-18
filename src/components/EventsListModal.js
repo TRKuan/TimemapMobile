@@ -38,7 +38,7 @@ class EventsListModal extends Component {
     const events = this.props.dayEvents;
     let children = (
         <View style={styles.empty}>
-            <Text>No Events. Time to relax!</Text>
+            <Text style={styles.darkColorText}>No Events. Time to relax!</Text>
         </View>
     );
     if(events){
