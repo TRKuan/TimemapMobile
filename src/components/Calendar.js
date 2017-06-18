@@ -29,7 +29,12 @@ export default class Calendar extends Component {
       dataSource: ds.cloneWithRows(['row 1', 'row 2', 'row 3'/*, 'row 4', 'row 5', 'row 6', 'row 7', 'row 8', 'row 9', 'row 2', 'row 10', 'row 11', 'row 12', 'row 13','row 14', 'row 15', 'row 16', 'row 17', 'row 18', 'row 19', 'row 20','row 21', 'row 22', 'row 23', 'row 24', 'row 25', 'row 26', 'row 27'*/]),
       canLoadMoreContent: true,
       currentMonth: 'June',
-      showAgenda: false
+      showAgenda: false,
+      selected: '2017-06-18',
+      markedDays: {
+        '2017-06-18': {marked: true, selected: true},
+        '2017-06-30': {marked: true}
+      }
     };
     this.onDayPress = this.onDayPress.bind(this);
   }
@@ -40,16 +45,35 @@ export default class Calendar extends Component {
     });
   }
   onDayPress(day) {
+    let tempMarked = {};
+    for(i in this.state.markedDays){
+      tempMarked[i] = this.state.markedDays[i];
+    }
+    if(tempMarked[this.state.selected]){
+      if(tempMarked[this.state.selected]['marked']){
+        tempMarked[this.state.selected] = {marked: true};
+      }
+      else{
+        tempMarked[this.state.selected] = {};
+      }
+    }
+    if(tempMarked[day.dateString]){
+      if(tempMarked[day.dateString]['marked']){
+        tempMarked[day.dateString] = {marked: true, selected: true};
+      }
+      else{
+        tempMarked[day.dateString] = {selected: true};
+      }
+    }
+    else{
+      tempMarked[day.dateString] = {selected: true};
+    }
     this.setState({
-      selected: day.dateString
+      selected: day.dateString,
+      markedDays: tempMarked
     });
-  }
-  onMonthChange = (months) =>{
-    this.setState({
-      currentMonths: months
-    });
-  }
 
+  }
   render() {
     const weekBar = (
       <Row size={1} style={[styles.week]}>
@@ -98,6 +122,9 @@ export default class Calendar extends Component {
 
     return (
       <View style={styles.container}>
+
+
+
           <CalendarList
             theme={{
             calendarBackground: '#F5FCFF',
@@ -112,10 +139,11 @@ export default class Calendar extends Component {
             arrowColor: '#17dfab',
             monthTextColor: '#17dfab'
           }}
+          displayLoadingIndicator
           onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
           onDayPress={this.onDayPress}
           style={styles.calendar}
-          markedDates={{[this.state.selected]: {selected: true}}}
+          markedDates={this.state.markedDays}
         />
         <Text>
           {this.state.currentMonths}
