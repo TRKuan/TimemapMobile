@@ -1,11 +1,12 @@
 import React from 'react';
-import {BackHandler} from 'react-native';
+import {BackHandler, AsyncStorage} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
+import {persistStore, autoRehydrate} from 'redux-persist'
 import {calendar} from './states/calendar-reducers.js';
 import {map} from './states/map-reducers.js';
 import {main} from './states/main-client-reducers.js';
@@ -40,16 +41,6 @@ const AppNavigator = TabNavigator({
 );
 
 class AppWithStyleAndNavigator extends React.Component {
-    constructor(props) {
-        super(props);
-        this.props.dispatch(setUserId('f4caed83-0067-4d10-b581-05ad09fa9234'));
-
-    }
-
-    componentWillMount() {
-        this.props.dispatch(initCalendar());
-    }
-
     render() {
         return (
             //<StyleProvider style={getTheme(platform)}>
@@ -95,9 +86,17 @@ const store = createStore(combineReducers({
     todayNextEvent,
     eventsForm,
     nav
-}), compose(applyMiddleware(thunkMiddleware/*, loggerMiddleware*/)));
+}),
+undefined,
+compose(applyMiddleware(thunkMiddleware, loggerMiddleware), autoRehydrate()));
+persistStore(store, {storage: AsyncStorage}, () => {
+    store.dispatch(initCalendar());
+});
 
 export default class App extends React.Component {
+    constructor(props){
+        super(props);
+    }
     render() {
         return (
             <Provider store={store}>
