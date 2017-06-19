@@ -31,7 +31,7 @@ export function getEvents() {
             dispatch(calculateMonthHasEvent());
         }).
             catch((err) => {
-                console.error("Can't get events from server"  + err.message);
+                console.error("Can't get events from server", err.message);
             });
     };
 }
@@ -53,7 +53,7 @@ export function addEvent(event) {
             dispatch(getDayEvents());
         }).
         catch((err) => {
-            console.error("Can't add event to server"  + err.message);
+            console.error("Can't add event to server", err.message);
         });
     };
 }
@@ -78,7 +78,7 @@ export function getNextEvent() {
             dispatch(updateNextEvent());
         }).
         catch((err) => {
-            console.error("Can't get next event" + err.message);
+            console.error("Can't get next event", err.message);
         });
     };
 }
@@ -134,7 +134,7 @@ export function getDayEvents() {
             dispatch(getDayEventsEnd(data));
         }).
         catch((err) => {
-            console.error("Can't get day events" + err.message);
+            console.error("Can't get day events", err.message);
         });
     };
 }
