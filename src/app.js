@@ -15,6 +15,10 @@ import {eventsForm} from './states/events-form-reducers.js';
 
 import {initCalendar, setUserId} from './states/calendar-actions';
 
+import {StyleProvider, Container, Header, Body, Title} from 'native-base';
+import getTheme from '../native-base-theme/components';
+import platform from '../native-base-theme/variables/platform';
+
 import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
@@ -22,7 +26,7 @@ import Settings from './components/Settings.js';
 import theme from './theme.js';
 
 const AppNavigator = TabNavigator({
-    Today: {screen: Today},
+    Home: {screen: Today},
     Calendar: {screen: Calendar},
     Settings: {screen: Settings}
 }, {
@@ -36,19 +40,24 @@ const AppNavigator = TabNavigator({
             backgroundColor: theme.themeColorDark
         }
     },
-    initialRouteName: 'Today'
+    initialRouteName: 'Home'
 }
 );
 
 class AppWithStyleAndNavigator extends React.Component {
     render() {
         return (
-            //<StyleProvider style={getTheme(platform)}>
+            <Container>
+                <Header noShadow={true}>
+                    <Body>
+                        <Title>{this.props.nav.routes[this.props.nav.index].routeName}</Title>
+                    </Body>
+                </Header>
                 <AppNavigator navigation={addNavigationHelpers({
                     dispatch: this.props.dispatch,
                     state: this.props.nav,
                 })}/>
-            //</StyleProvider>
+            </Container>
         );
     }
 
@@ -100,7 +109,9 @@ export default class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <AppWithNavState/>
+                <StyleProvider style={getTheme(platform)}>
+                    <AppWithNavState/>
+                </StyleProvider>
             </Provider>
         );
     }
