@@ -94,14 +94,14 @@ export default class Settings extends Component {
         }
         <Icon.Button name="google"
         backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
-          Login with google
+          Login with Google
         </Icon.Button>
         <Icon.Button
             name="facebook"
             backgroundColor="#3b5998"
             onPress={this.loginWithFacebook}
         >
-            Just test
+          Login with Facebook
         </Icon.Button>
       </View>
     );
