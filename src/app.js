@@ -1,5 +1,5 @@
 import React from 'react';
-import {BackHandler, AsyncStorage} from 'react-native';
+import {BackHandler, AsyncStorage, Text, View} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
@@ -98,15 +98,42 @@ const store = createStore(combineReducers({
 }),
 undefined,
 compose(applyMiddleware(thunkMiddleware, loggerMiddleware), autoRehydrate()));
-persistStore(store, {storage: AsyncStorage}, () => {
-    store.dispatch(initCalendar());
-});
 
 export default class App extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+            loading: true
+        };
+        persistStore(store, {storage: AsyncStorage}, () => {
+            store.dispatch(initCalendar());
+            this.setState({
+                loading: false
+            });
+            clearInterval(this.loadingId);
+        });
     }
     render() {
+        if(this.state.loading)
+            return(
+                <View
+                  style={{
+                    flex:1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                    <View style={{flex:4}}/>
+                    <View style={{flex:3}}>
+                      <Text
+                        style={{
+                          fontSize:20,
+                          color: theme.themeColorLight,
+
+                        }}>Loading</Text>
+                    </View>
+                </View>
+            );
         return (
             <Provider store={store}>
                 <StyleProvider style={getTheme(platform)}>
