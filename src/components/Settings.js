@@ -54,7 +54,7 @@ export default class Settings extends Component {
   loginWithFacebook = () => this.openURL('http://10.0.2.2:3000/auth/facebook');
 
   // Handle Login with Google button tap
-  loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google/');
+  loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google');
 
   // Open URL in a browser
   openURL = (url) => {
