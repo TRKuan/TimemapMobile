@@ -1,11 +1,12 @@
 import React from 'react';
-import {BackHandler} from 'react-native';
+import {BackHandler, AsyncStorage} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggerMiddleware from 'redux-logger';
 import {Provider, connect} from 'react-redux';
+import {persistStore, autoRehydrate} from 'redux-persist'
 import {calendar} from './states/calendar-reducers.js';
 import {map} from './states/map-reducers.js';
 import {main} from './states/main-client-reducers.js';
@@ -14,6 +15,10 @@ import {eventsForm} from './states/events-form-reducers.js';
 
 import {initCalendar, setUserId} from './states/calendar-actions';
 
+import {StyleProvider, Container, Header, Body, Title} from 'native-base';
+import getTheme from '../native-base-theme/components';
+import platform from '../native-base-theme/variables/platform';
+
 import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
@@ -21,7 +26,7 @@ import Settings from './components/Settings.js';
 import theme from './theme.js';
 
 const AppNavigator = TabNavigator({
-    Today: {screen: Today},
+    Home: {screen: Today},
     Calendar: {screen: Calendar},
     Settings: {screen: Settings}
 }, {
@@ -35,29 +40,24 @@ const AppNavigator = TabNavigator({
             backgroundColor: theme.themeColorDark
         }
     },
-    initialRouteName: 'Today'
+    initialRouteName: 'Home'
 }
 );
 
 class AppWithStyleAndNavigator extends React.Component {
-    constructor(props) {
-        super(props);
-        this.props.dispatch(setUserId('f4caed83-0067-4d10-b581-05ad09fa9234'));
-
-    }
-
-    componentWillMount() {
-        this.props.dispatch(initCalendar());
-    }
-
     render() {
         return (
-            //<StyleProvider style={getTheme(platform)}>
+            <Container>
+                <Header noShadow={true}>
+                    <Body>
+                        <Title>{this.props.nav.routes[this.props.nav.index].routeName}</Title>
+                    </Body>
+                </Header>
                 <AppNavigator navigation={addNavigationHelpers({
                     dispatch: this.props.dispatch,
                     state: this.props.nav,
                 })}/>
-            //</StyleProvider>
+            </Container>
         );
     }
 
@@ -95,13 +95,23 @@ const store = createStore(combineReducers({
     todayNextEvent,
     eventsForm,
     nav
-}), compose(applyMiddleware(thunkMiddleware/*, loggerMiddleware*/)));
+}),
+undefined,
+compose(applyMiddleware(thunkMiddleware, loggerMiddleware), autoRehydrate()));
+persistStore(store, {storage: AsyncStorage}, () => {
+    store.dispatch(initCalendar());
+});
 
 export default class App extends React.Component {
+    constructor(props){
+        super(props);
+    }
     render() {
         return (
             <Provider store={store}>
-                <AppWithNavState/>
+                <StyleProvider style={getTheme(platform)}>
+                    <AppWithNavState/>
+                </StyleProvider>
             </Provider>
         );
     }

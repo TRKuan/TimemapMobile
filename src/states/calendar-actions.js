@@ -1,18 +1,38 @@
 import moment from 'moment';
 import {initMap} from './map-actions.js'
 import {getDirection as getDirectionFormAPI} from '../api/mapboxAPI.js';
-import {addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
+import {getEvent as getEventFromAPI, addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
 
 export function initCalendar() {
     return (dispatch) => {
+        dispatch(getEvents());
         dispatch(getDayEvents());
-        dispatch(updateMonth());
         return dispatch(initMap()).then(() => {
             dispatch(getNextEvent());
         }).
-        then(() => {
-            dispatch(updateLeaveTimeStart());
-        });
+            then(() => {
+                dispatch(updateLeaveTimeStart());
+            });
+    };
+}
+
+function getEventsStart() {
+    return {type: '@CALENDAR/GET_EVENTS_START'};
+}
+function getEventsEnd(events) {
+    return {type: '@CALENDAR/GET_EVENTS_END', events};
+}
+
+export function getEvents() {
+    return (dispatch, getState) => {
+        dispatch(getEventsStart());
+        return getEventFromAPI(getState().calendar.userId).then((data) => {
+            dispatch(getEventsEnd(data));
+            dispatch(calculateMonthHasEvent());
+        }).
+            catch((err) => {
+                console.error("Can't get events from server", err.message);
+            });
     };
 }
 
@@ -31,10 +51,10 @@ export function addEvent(event) {
             dispatch(addEventEnd(data));
             dispatch(getNextEvent());
             dispatch(getDayEvents());
-            dispatch(updateMonth());
+            dispatch(calculateMonthHasEvent());
         }).
         catch((err) => {
-            console.error("Can't add event to server"  + err.message);
+            console.error("Can't add event to server", err.message);
         });
     };
 }
@@ -59,7 +79,7 @@ export function getNextEvent() {
             dispatch(updateNextEvent());
         }).
         catch((err) => {
-            console.error("Can't get next event" + err.message);
+            console.error("Can't get next event", err.message);
         });
     };
 }
@@ -80,15 +100,22 @@ export function updateNextEvent() {
         let {lng, lat, trans} = getState().calendar.nextEvent;
         if (!lng || !lat || !trans || !getState().map.currentPosition)
             return;
-        return getDirectionFormAPI(getState().map.currentPosition, {
+        return getDirectionFormAPI(
+            getState().map.currentPosition.longitude,
+            getState().map.currentPosition.latitude,
             lng,
-            lat
-        }, trans, getState().map.accessToken).then((data) => {
-            let event = JSON.parse(JSON.stringify(getState().calendar.nextEvent));
-            event.duration = data.duration;
-            event.distance = data.distance;
-            dispatch(updateNextEventEnd(event));
-        });
+            lat,
+            trans,
+            getState().map.accessToken).
+            then((data) => {
+                let event = JSON.parse(JSON.stringify(getState().calendar.nextEvent));
+                event.duration = data.duration;
+                event.distance = data.distance;
+                dispatch(updateNextEventEnd(event));
+            }).
+            catch(error => {
+                console.error(error.message);
+            });
     };
 }
 
@@ -104,32 +131,11 @@ export function getDayEvents() {
     return (dispatch, getState) => {
         dispatch(getDayEventsStart());
         let {userId, pickedDay} = getState().calendar;
-        return getDayFormAPI(userId, pickedDay.year(), pickedDay.month() + 1, pickedDay.date()).then((data) => {
+        return getDayFormAPI(userId, moment(pickedDay).year(), moment(pickedDay).month() + 1, moment(pickedDay).date()).then((data) => {
             dispatch(getDayEventsEnd(data));
         }).
         catch((err) => {
-            console.error("Can't get day events" + err.message);
-        });
-    };
-}
-
-function getMonthStart() {
-    return {type: '@CALENDAR/GET_MONTH_START'};
-}
-
-function getMonthEnd(hasEventList) {
-    return {type: '@CALENDAR/GET_MONTH_END', hasEventList};
-}
-
-export function getMonth() {
-    return (dispatch, getState) => {
-        dispatch(getMonthStart());
-        let {userId, year, month} = getState().calendar;
-        return getMonthFormAPI(userId, year, month).then((data) => {
-            dispatch(getMonthEnd(data));
-        }).
-        catch((err) => {
-            console.error("Can't get month" + err.message);
+            console.error("Can't get day events", err.message);
         });
     };
 }
@@ -138,156 +144,30 @@ function setPickedDayAction(pickedDay) {
     return {type: '@CALENDAR/SET_PICKED_DAY', pickedDay};
 }
 
+function setMonthHasEvent(hasEvent){
+    return {type: '@CALENDAR/SET_MONTH_HAS_EVENT', hasEvent};
+}
+
+export function calculateMonthHasEvent() {
+    return (dispatch, getState) => {
+        let hasEvent = {};
+        for(let event of getState().calendar.events){
+            let time = moment(event.startTs);
+            let end = moment(event.endTs);
+            hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
+            while(time.date()!==end.date()||time.month()!==end.month()||time.year()!==end.year()){
+                hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
+                time.add(1, 'day');
+            }
+        }
+        dispatch(setMonthHasEvent(hasEvent));
+    };
+}
+
 export function setDay(day) {
     return (dispatch, getState) => {
         dispatch(setPickedDayAction(day));
         return dispatch(getDayEvents());
-    };
-}
-
-function setMonthAction(month) {
-    return {type: '@CALENDAR/SET_MONTH', month};
-}
-
-export function setMonth(month) {
-    return (dispatch, getState) => {
-        if (month < 1 || month > 12)
-            return;
-        dispatch(setMonthAction(month));
-        dispatch(updateMonth());
-    };
-}
-
-function setYearAction(year) {
-    return {type: '@CALENDAR/SET_YEAR', year};
-}
-
-export function setYear(year) {
-    return (dispatch, getState) => {
-        dispatch(setYearAction(year));
-        dispatch(updateMonth());
-    };
-}
-export function datePicked(cellNum) {
-    return {type: '@CALENDAR/PICK_DAY', cellNum};
-}
-
-export function updateMonthNumbersCalc(year, month, pickedDay, monthHasEventList) {
-    let monthNumbers = [];
-    let m = moment({
-        year: year,
-        month: month - 1,
-        date: 1
-    });
-    let monthPrev = month - 2;
-    if (monthPrev < 0) {
-        monthPrev = 11;
-    }
-    let mPrev = moment({year: year, month: monthPrev, date: 1});
-    var firstDay = m.day();
-    var firstDayPrev = mPrev.daysInMonth() - firstDay;
-    let j = 0;
-    let k = 0;
-    for (let i = 0; i < 42; i++) {
-        monthNumbers[i] = {
-            isToday: false,
-            isPickedDay: false,
-            hasEvent: false
-        };
-        if (i < firstDay) {
-            monthNumbers[i] = {
-                date: firstDayPrev + 1,
-                notThisMonth: true
-            };
-            firstDayPrev++;
-        } else if (i < m.daysInMonth() + firstDay) {
-            monthNumbers[k + firstDay] = {
-                date: k + 1,
-                notThisMonth: false
-            };
-            k++;
-        } else {
-            j++;
-            monthNumbers[i] = {
-                date: j,
-                notThisMonth: true
-            };
-        }
-    }
-
-
-
-    if (month - 1 === moment().month()) {
-      //first mount
-        if (pickedDay.date() === moment().date() ) {
-
-            for (let i = 0; i < 42; i++) {
-                if (monthNumbers[i].date === moment().date()) {
-                    monthNumbers[i]['isToday'] = true;
-                    monthNumbers[i]['isPickedDay'] = true;
-
-                }
-            }
-        }
-        //today month change pickedDay
-        else {
-            for (let i = 0; i < 42; i++) {
-
-
-                if (monthNumbers[i].date === moment().date()) {
-                  monthNumbers[i]['isToday'] = true;
-                  monthNumbers[i]['isPickedDay'] = false;
-
-                }
-                if (pickedDay.month() === month-1 && monthNumbers[i].date === pickedDay.date()  && !monthNumbers[i].notThisMonth) {
-                  monthNumbers[i]['isToday'] = false;
-                  monthNumbers[i]['isPickedDay'] = true;
-
-                }
-            }
-        }
-    }
-    //change month
-    else if (month - 1 !== moment().month()) {
-
-
-        for (let i = 0; i < 42; i++) {
-          monthNumbers[i]['isToday'] = false;
-          monthNumbers[i]['isPickedDay'] = false;
-
-        }
-        if(pickedDay.month() === month-1){
-
-
-          for (let i = 0; i < 42; i++) {
-            if(pickedDay.date() === monthNumbers[i].date & !monthNumbers[i].notThisMonth){
-              monthNumbers[i]['isToday'] = false;
-              monthNumbers[i]['isPickedDay'] = true;
-
-            }
-
-          }
-        }
-    }
-    return (dispatch) => {
-        return dispatch(() => {
-            dispatch(updateMonthNumbers(monthNumbers));
-        });
-    };
-}
-export function updateMonthNumbers(monthNumbers) {
-    return {type: '@CALENDAR/UPDATE_MONTH_NUMBERS', monthNumbers};
-}
-
-export function updateMonth() {
-    return (dispatch, getState) => {
-        let arr = [];
-        for(let i=0;i<32;i++){
-            arr[i] = false;
-        }
-        dispatch(getMonthEnd(arr));
-        dispatch(updateMonthNumbersCalc(getState().calendar.year, getState().calendar.month, getState().calendar.pickedDay, getState().monthHasEventList));
-        return dispatch(getMonth());
     };
 }
 
@@ -306,9 +186,10 @@ function setLeaveTimeId(id){
 
 export function updateLeaveTimeStart() {
     return (dispatch) => {
+        dispatch(setLeaveTime());
         let id = setInterval(() => {
             dispatch(setLeaveTime());
-        }, 1000);
+        }, 60000);
         dispatch(setLeaveTimeId(id));
     };
 }

@@ -1,4 +1,5 @@
 import color from "color";
+import theme from "../../src/theme.js"
 
 import { Platform, Dimensions, PixelRatio } from "react-native";
 
@@ -151,14 +152,15 @@ export default {
 
   // Header
   toolbarBtnColor: platform === "ios" ? "#007aff" : "#fff",
-  toolbarDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  //toolbarDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  toolbarDefaultBg: platform === "ios" ? "#F8F8F8" : theme.themeColorDark,
   toolbarHeight: platform === "ios" ? 64 : 56,
   toolbarIconSize: platform === "ios" ? 20 : 22,
   toolbarSearchIconSize: platform === "ios" ? 20 : 23,
   toolbarInputColor: platform === "ios" ? "#CECDD2" : "#fff",
   searchBarHeight: platform === "ios" ? 30 : 40,
   toolbarInverseBg: "#222",
-  toolbarTextColor: platform === "ios" ? "#000" : "#fff",
+  toolbarTextColor: platform === "ios" ? "#000" : theme.themeColorLight,
   toolbarDefaultBorder: platform === "ios" ? "#a7a6ab" : "#3F51B5",
   iosStatusbar: platform === "ios" ? "dark-content" : "light-content",
   get statusBarColor() {
@@ -253,7 +255,8 @@ export default {
   subtitleColor: platform === "ios" ? "#8e8e93" : "#FFF",
 
   // New Variable
-  titleFontColor: platform === "ios" ? "#000" : "#FFF",
+  //titleFontColor: platform === "ios" ? "#000" : "#FFF",
+  titleFontColor: platform === "ios" ? "#000" : theme.themeColorLight,
 
   // Other
   borderRadiusBase: platform === "ios" ? 5 : 2,
