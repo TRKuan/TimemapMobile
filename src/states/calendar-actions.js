@@ -51,6 +51,7 @@ export function addEvent(event) {
             dispatch(addEventEnd(data));
             dispatch(getNextEvent());
             dispatch(getDayEvents());
+            dispatch(calculateMonthHasEvent());
         }).
         catch((err) => {
             console.error("Can't add event to server", err.message);
@@ -147,7 +148,7 @@ function setMonthHasEvent(hasEvent){
     return {type: '@CALENDAR/SET_MONTH_HAS_EVENT', hasEvent};
 }
 
-function calculateMonthHasEvent() {
+export function calculateMonthHasEvent() {
     return (dispatch, getState) => {
         let hasEvent = {};
         for(let event of getState().calendar.events){
