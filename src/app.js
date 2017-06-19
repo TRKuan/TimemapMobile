@@ -38,7 +38,8 @@ const AppNavigator = TabNavigator({
         },
         style: {
             backgroundColor: theme.themeColorDark
-        }
+        },
+        upperCaseLabel: false
     },
     initialRouteName: 'Home'
 }
