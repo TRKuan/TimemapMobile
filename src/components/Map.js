@@ -38,6 +38,8 @@ class Map extends Component {
     }
 
     componentWillReceiveProps(nextProps){
+        if(!this.props.currentPosition&&nextProps.currentPosition)
+            this.map.setCenterCoordinate(nextProps.currentPosition.latitude, nextProps.currentPosition.longitude, false);
         if(this.props.showNextEvent&&nextProps.nextEvent!=this.props.nextEvent){
             this.updateNextEventMarker(nextProps.nextEvent);
         }
@@ -62,7 +64,7 @@ class Map extends Component {
                 style={styles.map}
                 ref={(map) => {this.map = map;}}
                 initialZoomLevel={14}
-                initialCenterCoordinate={{latitude: 120.9917471227813, longitude: 24.79567369463787}}
+                initialCenterCoordinate={{latitude: 24.79567369463787, longitude: 120.9917471227813}}
                 rotateEnabled={this.props.pinable}
                 scrollEnabled={this.props.pinable}
                 zoomEnabled={this.props.pinable}
