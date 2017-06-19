@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {
+  Image,
+  Platform,
   StyleSheet,
   Linking,
   Text,
@@ -49,7 +51,7 @@ export default class Settings extends Component {
   };
 
   // Handle Login with Facebook button tap
-  loginWithFacebook = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/facebook');
+  loginWithFacebook = () => this.openURL('http://10.0.2.2:3000/auth/facebook');
 
   // Handle Login with Google button tap
   loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google/');
@@ -62,12 +64,44 @@ export default class Settings extends Component {
 //=============================================================================
 
   render() {
+    const { user } = this.state;
     return (
       <View style={styles.container}>
         <Text>Settings</Text>
+        { user
+          ? // Show user info if already logged in
+            <View style={styles.content}>
+              <Text style={styles.header}>
+                Welcome {user.name}!
+              </Text>
+              <View style={styles.avatar}>
+                <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+              </View>
+            </View>
+          : // Show Please log in message if not
+            <View style={styles.content}>
+              <Text style={styles.header}>
+                Welcome Stranger!
+              </Text>
+              <View style={styles.avatar}>
+                <Icon name="user-circle" size={100} color="rgba(0,0,0,.09)" />
+              </View>
+              <Text style={styles.text}>
+                Please log in to continue {'\n'}
+                to the awesomness
+              </Text>
+            </View>
+        }
         <Icon.Button name="google"
         backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
           Login with google
+        </Icon.Button>
+        <Icon.Button
+            name="facebook"
+            backgroundColor="#3b5998"
+            onPress={this.loginWithFacebook}
+        >
+            Just test
         </Icon.Button>
       </View>
     );
@@ -80,5 +114,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: 20,
+  },
+  avatarImage: {
+    borderRadius: 50,
+    height: 100,
+    width: 100,
+  },
+  header: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  text: {
+    textAlign: 'center',
+    color: '#333',
+    marginBottom: 5,
+  },
+  buttons: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    margin: 20,
+    marginBottom: 30,
   }
 });

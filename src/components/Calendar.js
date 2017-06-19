@@ -3,20 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  ListView
+  ScrollView
 } from 'react-native';
-import {
-  Container,
-  Header,
-  Col,
-  Row
-} from 'native-base';
+import { Fab, Button, Container } from 'native-base';
 
-import InfiniteScrollView from 'react-native-infinite-scroll-view';
-import {CalendarList, Agenda, Calendar as CalendarFromNPM} from 'react-native-calendars';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-simple-modal';
+import {CalendarList} from 'react-native-calendars';
+import EventsListModal from './EventsListModal.js';
 
-import CalendarMonthDay from './CalendarMonthDay.js';
-import CalendarMonthWeek from './CalendarMonthWeek.js';
 export default class Calendar extends Component {
   static navigationOptions = {
     tabBarLabel: 'Calendar'
@@ -24,26 +19,23 @@ export default class Calendar extends Component {
   constructor(props) {
     super(props);
 
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(['row 1', 'row 2', 'row 3'/*, 'row 4', 'row 5', 'row 6', 'row 7', 'row 8', 'row 9', 'row 2', 'row 10', 'row 11', 'row 12', 'row 13','row 14', 'row 15', 'row 16', 'row 17', 'row 18', 'row 19', 'row 20','row 21', 'row 22', 'row 23', 'row 24', 'row 25', 'row 26', 'row 27'*/]),
-      canLoadMoreContent: true,
-      currentMonth: 'June',
-      showAgenda: false,
       selected: '2017-06-18',
       markedDays: {
         '2017-06-18': {marked: true, selected: true},
-        '2017-06-30': {marked: true}
-      }
-    };
+        '2017-06-30': {marked: true},
+        '2017-07-30': {marked: true},
+      },
+      isModalVisible: false,
+      fabActive: false,
+    }
     this.onDayPress = this.onDayPress.bind(this);
   }
-  loadMoreContentAsync = async () =>{
-    this.setState({
-      items: {},
-      dataSource: this.state.dataSource.cloneWithRows(['row99', 'row99', 'row99', /*'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99', 'row99','row 1', 'row 2', 'row 3', 'row 4', 'row 5', 'row 6', 'row 7', 'row 8', 'row 9', 'row 2', 'row 10', 'row 11', 'row 12', 'row 13','row 14', 'row 15', 'row 16', 'row 17', 'row 18', 'row 19', 'row 20','row 21', 'row 22', 'row 23', 'row 24', 'row 25', 'row 26', 'row 27'*/]),
-    });
-  }
+
+  _showModal = () => this.setState({ isModalVisible: true })
+
+  _hideModal = () => this.setState({ isModalVisible: false })
+
   onDayPress(day) {
     let tempMarked = {};
     for(i in this.state.markedDays){
@@ -72,93 +64,60 @@ export default class Calendar extends Component {
       selected: day.dateString,
       markedDays: tempMarked
     });
-
+    this._showModal();
   }
   render() {
-    const weekBar = (
-      <Row size={1} style={[styles.week]}>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Sun</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Mon</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Tue</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Wed</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Thu</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Fri</Text></Col>
-        <Col style={[styles.dayOfWeek, /*styles.border*/]}><Text style={styles.lightColorText}>Sat</Text></Col>
-      </Row>
-    );
-    const month = (
-        <View>
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-          <CalendarMonthWeek />
-        </View>
-    );
-    const temp = (
-      <Container style={{backgroundColor: "#F5FCFF"}}>
-        <Col size={1} style={[styles.calendarHeader, /*styles.border*/]}>
-          <Row size={3} style={[styles.calendarMonthYearDisplay, , /*styles.border*/]}>
-            <Text style={[styles.calendarMonthText, styles.lightColorText, , /*styles.border*/]}>
-              DECEMBER 2017
-            </Text>
-          </Row>
-          {weekBar}
-        </Col>
-        <Col size={5} style={styles.daysContainer}>
-          <ListView
-            renderScrollComponent={props => <InfiniteScrollView {...props} />}
-            dataSource={this.state.dataSource}
-            distanceToLoadMore={10}
-            renderRow={(row) => <Text>{row}</Text>}
-            canLoadMore={this.state.canLoadMoreContent}
-            onLoadMoreAsync={this.loadMoreContentAsync}
-          />
-        </Col>
-      </Container>
+    const calendarList = (
+      <CalendarList
+        theme={{
+        calendarBackground: '#F5FCFF',
+        textSectionTitleColor: '#bbb',
+        selectedDayBackgroundColor: '#17dfab',
+        selectedDayTextColor: '#ffffff',
+        todayTextColor: '#17dfab',
+        dayTextColor: '#888',
+        textDisabledColor: '#eee',
+        dotColor: '#17dfab',
+        selectedDotColor: '#ffffff',
+        arrowColor: '#17dfab',
+        monthTextColor: '#17dfab'
+      }}
+
+      onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
+      onDayPress={this.onDayPress}
+      style={styles.calendar}
+      markedDates={this.state.markedDays}
+    />
     );
 
     return (
-      <View style={styles.container}>
-
-
-
-          <CalendarList
-            theme={{
-            calendarBackground: '#F5FCFF',
-            textSectionTitleColor: '#bbb',
-            selectedDayBackgroundColor: '#17dfab',
-            selectedDayTextColor: '#ffffff',
-            todayTextColor: '#17dfab',
-            dayTextColor: '#888',
-            textDisabledColor: '#eee',
-            dotColor: '#17dfab',
-            selectedDotColor: '#ffffff',
-            arrowColor: '#17dfab',
-            monthTextColor: '#17dfab'
-          }}
-          displayLoadingIndicator
-          onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
-          onDayPress={this.onDayPress}
-          style={styles.calendar}
-          markedDates={this.state.markedDays}
-        />
-        <Text>
-          {this.state.currentMonths}
-        </Text>
-
-
+      <View style={{ flex: 1}}>
+        <Container>
+          <Fab
+              active={this.state.fabActive}
+              containerStyle={{ marginRight: 10 }}
+              style={{ backgroundColor: '#17dfab' }}
+              onPress={() => this.setState({ fabActive: !this.state.fabActive, isModalVisible: true })}>
+              <Icon name="plus" />
+          </Fab>
+          {calendarList}
+          <Modal
+          offset={this.state.offset}
+          animationDuration={600}
+  	      animationTension={30}
+          overlayBackground={'rgba(0, 0, 0, 0.6)'}
+          open={this.state.isModalVisible}
+          modalDidOpen={() => console.log('modal did open')}
+          modalDidClose={this._hideModal}
+          modalStyle={{padding: 0, borderRadius: 5}}>
+            <EventsListModal date={this.state.selected}/>
+          </Modal>
+        </Container>
 
       </View>
 
-
-
-
     );
   }
-
 
 }
 
@@ -176,47 +135,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
   },
-  calendarHeader: {
-    backgroundColor: "#17dfab",
-    justifyContent: "center",
-    alignItems: "center",
 
-  },
-  calendarMonthYearDisplay: {
-    paddingTop: 10,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  calendarMonthText: {
-    fontSize: 25
-  },
-  dayOfWeek:{
-    //borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  week:{
-    paddingLeft: 15,
-    paddingRight: 15
-  },
-  daysContainer: {
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-  dayCell: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  hasEventBar: {
-      borderBottomWidth: 5,
-      borderColor: "#17dfab",
-      paddingTop: 4,
-      paddingBottom: 2
-  },
-  calendar: {
-    borderTopWidth: 1,
-    paddingTop: 5,
-    borderBottomWidth: 1,
-    borderColor: '#eee'
-  },
 });
