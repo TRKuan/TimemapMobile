@@ -3,8 +3,6 @@ import uuid from 'uuid/v4'
 const initCalendarState = {
     userId: uuid(),
     events: [],
-    year: moment().year(),
-    month: moment().month()+1,
     pickedDay: moment(),
     monthHasEventList: [],
     monthNumbers: [],
@@ -100,33 +98,6 @@ export function calendar(state = initCalendarState, action) {
         return {
             ...state,
             pickedDay: action.pickedDay
-        };
-    case '@CALENDAR/SET_MONTH':
-        return {
-            ...state,
-            month: action.month
-        };
-    case '@CALENDAR/SET_YEAR':
-        return {
-            ...state,
-            year: action.year
-        };
-    case '@CALENDAR/UPDATE_MONTH_NUMBERS':
-        return {
-            ...state,
-            monthNumbers: action.monthNumbers
-        };
-    case '@CALENDAR/PICK_DAY':
-        let newMonthNumbers = state.monthNumbers.slice();
-        for(let i=0; i<42; i++){
-          if(newMonthNumbers[i].isPickedDay){
-            newMonthNumbers[i].isPickedDay = false;
-          }
-        }
-        newMonthNumbers[action.cellNum].isPickedDay = true;
-        return {
-            ...state,
-            monthNumbers: newMonthNumbers
         };
     case '@CALENDAR/SET_LEAVE_TIME':
         if(!state.nextEvent)return state;
