@@ -56,6 +56,10 @@ export default class Settings extends Component {
   // Handle Login with Google button tap
   loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google');
 
+  logoutWithFacebook = () => this.setState({
+    user: undefined
+  });
+
   // Open URL in a browser
   openURL = (url) => {
       Linking.openURL(url);
@@ -92,17 +96,31 @@ export default class Settings extends Component {
               </Text>
             </View>
         }
-        <Icon.Button name="google"
-        backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
-          Login with Google
-        </Icon.Button>
-        <Icon.Button
+        { user?
+          <View>
+            <Icon.Button
             name="facebook"
             backgroundColor="#3b5998"
-            onPress={this.loginWithFacebook}
-        >
-          Login with Facebook
-        </Icon.Button>
+            onPress={this.logoutWithFacebook}
+            >
+              Logout with Facebook
+            </Icon.Button>
+          </View>
+          :
+          <View>
+          <Icon.Button name="google"
+          backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
+            Login with Google
+          </Icon.Button>
+          <Icon.Button
+              name="facebook"
+              backgroundColor="#3b5998"
+              onPress={this.loginWithFacebook}
+          >
+            Login with Facebook
+          </Icon.Button>
+        </View>
+      }
       </View>
     );
   }
