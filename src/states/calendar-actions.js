@@ -1,18 +1,38 @@
 import moment from 'moment';
 import {initMap} from './map-actions.js'
 import {getDirection as getDirectionFormAPI} from '../api/mapboxAPI.js';
-import {addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
+import {getEvent as getEventFromAPI, addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
 
 export function initCalendar() {
     return (dispatch) => {
+        dispatch(getEvents());
         dispatch(getDayEvents());
         dispatch(updateMonth());
         return dispatch(initMap()).then(() => {
             dispatch(getNextEvent());
         }).
-        then(() => {
-            dispatch(updateLeaveTimeStart());
-        });
+            then(() => {
+                dispatch(updateLeaveTimeStart());
+            });
+    };
+}
+
+function getEventsStart() {
+    return {type: '@CALENDAR/GET_EVENTS_START'};
+}
+function getEventsEnd(events) {
+    return {type: '@CALENDAR/GET_EVENTS_END', events};
+}
+
+export function getEvents() {
+    return (dispatch, getState) => {
+        dispatch(getEventsStart());
+        return getEventFromAPI(getState().calendar.userId).then((data) => {
+            dispatch(getEventsEnd(data));
+        }).
+            catch((err) => {
+                console.error("Can't get events from server"  + err.message);
+            });
     };
 }
 

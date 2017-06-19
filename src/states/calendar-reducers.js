@@ -19,6 +19,15 @@ const initCalendarState = {
 export function calendar(state = initCalendarState, action) {
     let events = null;
     switch (action.type) {
+    case '@CALENDAR/GET_EVENTS_START':
+        return {
+            ...state
+        };
+    case '@CALENDAR/GET_EVENTS_END':
+        return {
+            ...state,
+            events: action.events
+        };
     case '@CALENDAR/ADD_EVENT_START':
         return {
             ...state
