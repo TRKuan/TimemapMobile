@@ -124,14 +124,14 @@ export default class App extends React.Component {
                     alignItems: 'center'
                   }}
                 >
-                    <View style={{flex:4}}/>
+                    <View style={{flex:5}}/>
                     <View style={{flex:3}}>
                       <Text
                         style={{
-                          fontSize:20,
+                          fontSize:16,
                           color: theme.themeColorLight,
 
-                        }}>Loading</Text>
+                        }}>Loading...</Text>
                     </View>
                 </View>
             );
