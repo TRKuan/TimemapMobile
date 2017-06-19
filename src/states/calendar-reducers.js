@@ -4,7 +4,7 @@ const initCalendarState = {
     userId: uuid(),
     events: [],
     pickedDay: moment(),
-    monthHasEventList: [],
+    monthHasEvent: {},
     monthNumbers: [],
     nextEvent: null,
     dayEvents: [],
@@ -98,6 +98,11 @@ export function calendar(state = initCalendarState, action) {
         return {
             ...state,
             pickedDay: action.pickedDay
+        };
+    case '@CALENDAR/SET_MONTH_HAS_EVENT':
+        return {
+            ...state,
+            monthHasEvent: action.hasEvent
         };
     case '@CALENDAR/SET_LEAVE_TIME':
         if(!state.nextEvent)return state;

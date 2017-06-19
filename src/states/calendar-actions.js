@@ -28,6 +28,7 @@ export function getEvents() {
         dispatch(getEventsStart());
         return getEventFromAPI(getState().calendar.userId).then((data) => {
             dispatch(getEventsEnd(data));
+            dispatch(calculateMonthHasEvent());
         }).
             catch((err) => {
                 console.error("Can't get events from server"  + err.message);
@@ -140,6 +141,26 @@ export function getDayEvents() {
 
 function setPickedDayAction(pickedDay) {
     return {type: '@CALENDAR/SET_PICKED_DAY', pickedDay};
+}
+
+function setMonthHasEvent(hasEvent){
+    return {type: '@CALENDAR/SET_MONTH_HAS_EVENT', hasEvent};
+}
+
+function calculateMonthHasEvent() {
+    return (dispatch, getState) => {
+        let hasEvent = {};
+        for(let event of getState().calendar.events){
+            let time = moment(event.startTs);
+            let end = moment(event.endTs);
+            hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
+            while(time.date()!==end.date()||time.month()!==end.month()||time.year()!==end.year()){
+                hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
+                time.add(1, 'day');
+            }
+        }
+        dispatch(setMonthHasEvent(hasEvent));
+    };
 }
 
 export function setDay(day) {
