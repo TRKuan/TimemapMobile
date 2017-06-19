@@ -29,7 +29,7 @@ class Today extends Component {
                 </View>
                 <View style={styles.info}>
                   <View>
-                    <Text style={styles.textLight}><Icon name="bullseye" size={size} color={theme.themeColorLight} /> Next Event</Text>
+                    <Text style={styles.textLight}><Icon name="bullseye" size={size} color={theme.themeColorLight} /> Next Event{"\n"}</Text>
                     <Text style={[styles.textLight, {fontSize: size*1.5, paddingLeft:size, borderLeftWidth:7, borderColor:"rgb(56, 237, 123)"}]}>{this.props.title}</Text>
                     <Text style={styles.textLight}><Icon name="bell-o" size={size} color={theme.themeColorLight} /> Should leave {moment.duration(this.props.leaveTime, 'seconds').humanize(true)}</Text>
                     <Text style={styles.textLight}><Icon name="clock-o" size={size} color={theme.themeColorLight} /> {moment(this.props.startTs).format('MMM D, YYYY')}</Text>
