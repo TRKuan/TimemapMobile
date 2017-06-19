@@ -98,15 +98,22 @@ export function updateNextEvent() {
         let {lng, lat, trans} = getState().calendar.nextEvent;
         if (!lng || !lat || !trans || !getState().map.currentPosition)
             return;
-        return getDirectionFormAPI(getState().map.currentPosition, {
+        return getDirectionFormAPI(
+            getState().map.currentPosition.longitude,
+            getState().map.currentPosition.latitude,
             lng,
-            lat
-        }, trans, getState().map.accessToken).then((data) => {
-            let event = JSON.parse(JSON.stringify(getState().calendar.nextEvent));
-            event.duration = data.duration;
-            event.distance = data.distance;
-            dispatch(updateNextEventEnd(event));
-        });
+            lat,
+            trans,
+            getState().map.accessToken).
+            then((data) => {
+                let event = JSON.parse(JSON.stringify(getState().calendar.nextEvent));
+                event.duration = data.duration;
+                event.distance = data.distance;
+                dispatch(updateNextEventEnd(event));
+            }).
+            catch(error => {
+                console.error(error.message);
+            });
     };
 }
 
