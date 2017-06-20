@@ -1,14 +1,15 @@
 const initEventsFormState = {
     title: '',
-    startTimeYMD:null,
-    startTimeHM:null,
-    endTimeYMD: null,
-    endTimeHM: null,
-    label: '',
-    transportation: 'car',
+    startTime: null,
+    endTime: null,
+    transportation: 'walking',
     description: '',
     location: '',
-    geoLocation: ''
+    geoLocation: {},
+    timeInvalid: true,
+    walking: true,
+    dirving: false,
+    cycling: false
 };
 export function eventsForm(state = initEventsFormState, action) {
     switch (action.type) {
@@ -38,16 +39,12 @@ export function eventsForm(state = initEventsFormState, action) {
         case '@EVENTSFORM/SUBMIT_FORM':
               return {
                   ...state,
-                  title: action.form.title,
-                  startTimeYMD: action.form.startTimeYMD,
-                  startTimeHM: action.form.startTimeHM,
-                  endTimeYMD: action.form.endTimeYMD,
-                  endTimeHM: action.form.endTimeHM,
-                  label:  action.form.label,
-                  transportation:  action.form.transportation,
-                  description:  action.form.description,
-                  location:  action.form.location
+                  ...action.form
               };
+        case '@EVENTSFORM/CLEAN_FORM':
+            return{
+                ...initEventsFormState
+            }
         case '@EVENTSFORM/UPDATE_FORM':
               return {
                   initEventsFormState
