@@ -23,6 +23,7 @@ import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navig
 import Today from './components/Today.js';
 import Calendar from './components/Calendar.js';
 import Settings from './components/Settings.js';
+import EventForm from './components/EventForm.js';
 import theme from './theme.js';
 
 const AppNavigator = TabNavigator({
