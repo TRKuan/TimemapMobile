@@ -10,7 +10,6 @@ import {
 import {Container, Content, Form, Item, Input, Label, Button, ListItem, Radio} from 'native-base';
 import {connect} from 'react-redux';
 import {submitForm, cleanForm} from '../states/events-form-actions';
-import Map from './Map.js';
 
 import moment from 'moment';
 
@@ -110,7 +109,6 @@ class EventForm extends Component {
                   <Input onChange={(e) => this.setState({location: e.nativeEvent.text})}/>
                 </Item>
               </Form>
-              <Map style={{height: 500, margin: 50}} pinable={true} showNextEvent={false} />
               <Button style={{margin: 50}} block primary onPress={() => this.props.navigation.navigate('AddEventMap')}>
                 <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Next</Text>
               </Button>
