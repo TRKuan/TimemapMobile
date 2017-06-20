@@ -155,6 +155,7 @@ export function calculateMonthHasEvent() {
             let time = moment(event.startTs);
             let end = moment(event.endTs);
             hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
+            hasEvent[`${end.format("YYYY-MM-DD")}`] = {marked: true};
             while(time.date()!==end.date()||time.month()!==end.month()||time.year()!==end.year()){
                 hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
                 time.add(1, 'day');
