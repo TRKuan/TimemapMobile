@@ -51,10 +51,14 @@ export default class Settings extends Component {
   };
 
   // Handle Login with Facebook button tap
-  loginWithFacebook = () => this.openURL('http://10.0.2.2:3000/auth/facebook');
+  loginWithFacebook = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/facebook');
 
   // Handle Login with Google button tap
-  loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google/');
+  loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google');
+
+  logoutWithFacebook = () => this.setState({
+    user: undefined
+  });
 
   // Open URL in a browser
   openURL = (url) => {
@@ -72,7 +76,8 @@ export default class Settings extends Component {
           ? // Show user info if already logged in
             <View style={styles.content}>
               <Text style={styles.header}>
-                Welcome {user.name}!
+                Welcome {user.name}!{'\n'}
+                your id {user.id}
               </Text>
               <View style={styles.avatar}>
                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
@@ -92,17 +97,31 @@ export default class Settings extends Component {
               </Text>
             </View>
         }
-        <Icon.Button name="google"
-        backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
-          Login with google
-        </Icon.Button>
-        <Icon.Button
+        { user?
+          <View>
+            <Icon.Button
             name="facebook"
             backgroundColor="#3b5998"
-            onPress={this.loginWithFacebook}
-        >
-            Just test
-        </Icon.Button>
+            onPress={this.logoutWithFacebook}
+            >
+              Logout with Facebook
+            </Icon.Button>
+          </View>
+          :
+          <View>
+          <Icon.Button name="google"
+          backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
+            Login with Google
+          </Icon.Button>
+          <Icon.Button
+              name="facebook"
+              backgroundColor="#3b5998"
+              onPress={this.loginWithFacebook}
+          >
+            Login with Facebook
+          </Icon.Button>
+        </View>
+      }
       </View>
     );
   }
