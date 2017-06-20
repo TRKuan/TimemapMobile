@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class Settings extends Component {
+import {connect} from 'react-redux';
+import {setUserId} from '../states/calendar-actions';
+
+class Settings extends Component {
   static navigationOptions = {
     tabBarLabel: 'Settings'
   };
@@ -44,7 +47,10 @@ export default class Settings extends Component {
     this.setState({
       // Decode the user string and parse it into JSON
       user: JSON.parse(decodeURI(user_string))
+    }, () => {
+      this.props.dispatch(setUserId(this.state.id));
     });
+
     if (Platform.OS === 'ios') {
       SafariView.dismiss();
     }
@@ -56,7 +62,7 @@ export default class Settings extends Component {
   // Handle Login with Google button tap
   loginWithGoogle = () => this.openURL('http://timemaploginserver.us-west-2.elasticbeanstalk.com/auth/google');
 
-  logoutWithFacebook = () => this.setState({
+  logout = () => this.setState({
     user: undefined
   });
 
@@ -69,20 +75,10 @@ export default class Settings extends Component {
 
   render() {
     const { user } = this.state;
-    return (
-      <View style={styles.container}>
-        { user
-          ? // Show user info if already logged in
-            <View style={styles.content}>
-              <Text style={styles.header}>
-                Welcome {user.name}!{'\n'}
-                your id {user.id}
-              </Text>
-              <View style={styles.avatar}>
-                <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
-              </View>
-            </View>
-          : // Show Please log in message if not
+    if(!user){
+      return(
+        <View style={styles.container}>
+          <View style={styles.content}>
             <View style={styles.content}>
               <Text style={styles.header}>
                 Welcome Stranger!
@@ -95,25 +91,14 @@ export default class Settings extends Component {
                 to the awesomness
               </Text>
             </View>
-        }
-        { user?
-          <View style={styles.buttons}>
-            <Icon.Button
-            name="facebook"
-            backgroundColor="#3b5998"
-            onPress={this.logoutWithFacebook}
-            >
-              Logout with Facebook
-            </Icon.Button>
           </View>
-          :
           <View style={styles.buttons}>
             <Icon.Button
-            name="google"
-            backgroundColor="#4285f4"
-            title="Login"
-            onPress={this.loginWithGoogle}
-            {...iconStyles}
+              name="google"
+              backgroundColor="#4285f4"
+              title="Login"
+              onPress={this.loginWithGoogle}
+              {...iconStyles}
             >
               Login with Google
             </Icon.Button>
@@ -126,9 +111,59 @@ export default class Settings extends Component {
               Login with Facebook
             </Icon.Button>
           </View>
+        </View>
+      );
+    }else {
+      if(user.source === "Facebook"){
+        return(
+          <View style={styles.container}>
+            <View style={styles.content}>
+              <Text style={styles.header}>
+                Welcome {user.name}!{'\n'}
+                your id {user.id}
+              </Text>
+              <View style={styles.avatar}>
+                <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+              </View>
+            </View>
+            <View style={styles.buttons}>
+              <Icon.Button
+              name="facebook"
+              backgroundColor="#3b5998"
+              onPress={this.logout}
+              {...iconStyles}
+              >
+                Logout with Facebook
+              </Icon.Button>
+            </View>
+          </View>
+        )
+      }else {
+        return(
+          <View style={styles.container}>
+            <View style={styles.content}>
+              <Text style={styles.header}>
+                Welcome {user.name}!{'\n'}
+                your id {user.id}
+              </Text>
+              <View style={styles.avatar}>
+                <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+              </View>
+            </View>
+            <View style={styles.buttons}>
+              <Icon.Button
+              name="google"
+              backgroundColor="#4285f4"
+              onPress={this.logout}
+              {...iconStyles}
+              >
+                Logout with Google
+              </Icon.Button>
+            </View>
+          </View>
+        )
       }
-      </View>
-    );
+    }
   }
 }
 
@@ -176,3 +211,7 @@ const styles = StyleSheet.create({
     //alignItems: 'center'
   }
 });
+
+export default connect((state, ownProps) => ({
+
+}))(Settings);
