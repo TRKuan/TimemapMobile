@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {Dimensions, StyleSheet, View, Text} from 'react-native';
 import {Container, Header, Left, Body, Right, Content, Icon, Title, Button} from 'native-base';
 import {connect} from 'react-redux';
-import {submitForm, cleanForm} from '../states/events-form-actions';
+import {cleanForm} from '../states/events-form-actions';
+import {addEvent} from '../states/calendar-actions';
 import Map from './Map.js';
 import theme from '../theme.js';
 
@@ -25,6 +26,7 @@ class FormMap extends Component {
                   onPress={() => {
                     this.props.dispatch(NavigationActions.back());
                     this.props.dispatch(NavigationActions.back());
+                    this.handleSubmite();
                   }}
                 >
                   <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Add</Text>
@@ -33,9 +35,28 @@ class FormMap extends Component {
           </View>
         );
     }
+    handleSubmite(){
+      try{
+        this.props.dispatch(addEvent({
+          allDay: false,
+          location: this.props.eventForm.location,
+          lng: this.props.pinPosition.longitude,
+          lat: this.props.pinPosition.latitude,
+          startTs: this.props.eventForm.startTs.toISOString(),
+          endTs: this.props.eventForm.endTs.toISOString(),
+          title: this.props.eventForm.title,
+          description: this.props.eventForm.description,
+          trans: this.props.eventForm.trans
+        }));
+        this.props.dispatch(cleanForm());
+      }catch(err){
+        console.error("add event faild", err.message);
+      }
+    }
 
 }
 
 export default connect((state, ownProps) => ({
-    ...state.eventsForm
+    eventForm: state.eventsForm,
+    pinPosition: state.map.pinPosition
 }))(FormMap);

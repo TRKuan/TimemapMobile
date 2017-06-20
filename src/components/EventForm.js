@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Container, Content, Form, Item, Input, Label, Button, ListItem, Radio} from 'native-base';
 import {connect} from 'react-redux';
-import {submitForm, cleanForm} from '../states/events-form-actions';
+import {submitForm} from '../states/events-form-actions';
 
 import moment from 'moment';
 
@@ -23,18 +23,15 @@ class EventForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-            title: '',
-            startTime: null,
-            endTime: null,
-            transportation: 'walking',
-            description: '',
-            location: '',
-            geoLocation: {},
-            timeInvalid: true,
-            walking: true,
-            dirving: false,
-            cycling: false
+            ...this.props.eventForm,
+            startTs: this.props.eventForm.startTs?moment(this.props.eventForm.startTs):null,
+            endTs: this.props.eventForm.endTs?moment(this.props.eventForm.endTs):null
         };
+    }
+
+    componentWillUpdate(nextProps, nextState){
+        if(this.state!==nextState)
+            this.props.dispatch(submitForm(nextState));
     }
 
     render() {
@@ -52,13 +49,13 @@ class EventForm extends Component {
                     <Button style={{margin: 10, width:110}} primary onPress={() => this.onStartTimeClicked()}>
                       <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Start Time</Text>
                     </Button>
-                    <Text style={{color: this.state.timeInvalid?'red':theme.themeColorDark, flex:1, textAlign: 'center', fontSize: 17}}>{this.state.startTime?this.state.startTime.format('MMM D, YYYY ddd hh:mm a'):""}</Text>
+                    <Text style={{color: this.state.timeInvalid?'red':theme.themeColorDark, flex:1, textAlign: 'center', fontSize: 17}}>{this.state.startTs?this.state.startTs.format('MMM D, YYYY ddd hh:mm a'):""}</Text>
                   </View>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Button style={{margin: 10, width:110}} primary onPress={() => this.onEndTimeClicked()}>
                       <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>End Time</Text>
                     </Button>
-                    <Text style={{color: this.state.timeInvalid?'red':theme.themeColorDark, flex:1, textAlign: 'center', fontSize: 17}}>{this.state.endTime?this.state.endTime.format('MMM D, YYYY ddd hh:mm a'):""}</Text>
+                    <Text style={{color: this.state.timeInvalid?'red':theme.themeColorDark, flex:1, textAlign: 'center', fontSize: 17}}>{this.state.endTs?this.state.endTs.format('MMM D, YYYY ddd hh:mm a'):""}</Text>
                   </View>
                 </View>
 
@@ -117,23 +114,22 @@ class EventForm extends Component {
         );
     }
 
-
   async onStartTimeClicked(){
       try {
         let {action, year, month, day} = await DatePickerAndroid.open({
-          date: this.state.startTime?this.state.startTime.toDate():new Date(),
-          maxDate: this.state.endTime?this.state.endTime.toDate():undefined
+          date: this.state.startTs?this.state.startTs.toDate():new Date(),
+          maxDate: this.state.endTs?this.state.endTs.toDate():undefined
         });
         if (action !== DatePickerAndroid.dismissedAction) {
           try {
               let {action, hour, minute} = await TimePickerAndroid.open({
-                hour: this.state.startTime?this.state.startTime.hour():moment().hour(),
-                minute: this.state.startTime?this.state.startTime.minute():moment().minute(),
+                hour: this.state.startTs?this.state.startTs.hour():moment().hour(),
+                minute: this.state.startTs?this.state.startTs.minute():moment().minute(),
                 is24Hour: false,
               });
               if (action !== TimePickerAndroid.dismissedAction) {
                 this.setState({
-                    startTime: moment({year, month, day, hour, minute})
+                    startTs: moment({year, month, day, hour, minute})
                 }, () => this.alertInvalidTime());
               }
           } catch ({code, message}) {
@@ -148,19 +144,19 @@ class EventForm extends Component {
   async onEndTimeClicked(){
       try {
         let {action, year, month, day} = await DatePickerAndroid.open({
-          date: this.state.endTime?this.state.endTime.toDate():new Date(),
-          minDate: this.state.startTime?this.state.startTime.toDate():undefined
+          date: this.state.endTs?this.state.endTs.toDate():new Date(),
+          minDate: this.state.startTs?this.state.startTs.toDate():undefined
         });
         if (action !== DatePickerAndroid.dismissedAction) {
           try {
               let {action, hour, minute} = await TimePickerAndroid.open({
-                hour: this.state.endTime?this.state.endTime.hour():moment().hour(),
-                minute: this.state.endTime?this.state.endTime.minute():moment().minute(),
+                hour: this.state.endTs?this.state.endTs.hour():moment().hour(),
+                minute: this.state.endTs?this.state.endTs.minute():moment().minute(),
                 is24Hour: false,
               });
               if (action !== TimePickerAndroid.dismissedAction) {
                 this.setState({
-                    endTime: moment({year, month, day, hour, minute})
+                    endTs: moment({year, month, day, hour, minute})
                 }, () => this.alertInvalidTime());
               }
           } catch ({code, message}) {
@@ -174,7 +170,7 @@ class EventForm extends Component {
   }
 
   alertInvalidTime(){
-      if(this.state.startTime&&this.state.endTime&&this.state.endTime.unix()>=this.state.startTime.unix()){
+      if(this.state.startTs&&this.state.endTs&&this.state.endTs.unix()>=this.state.startTs.unix()){
         this.setState({
             timeInvalid: false
         });
@@ -182,7 +178,7 @@ class EventForm extends Component {
         this.setState({
             timeInvalid: true
         });
-        if(this.state.startTime&&this.state.endTime)
+        if(this.state.startTs&&this.state.endTs)
             Alert.alert(
               'Invalid Time',
               'Start time must before end time.',
@@ -197,5 +193,5 @@ class EventForm extends Component {
 }
 
 export default connect((state, ownProps) => ({
-    ...state.eventsForm
+    eventForm: state.eventsForm
 }))(EventForm);

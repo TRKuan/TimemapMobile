@@ -1,7 +1,7 @@
 const initEventsFormState = {
     title: '',
-    startTime: null,
-    endTime: null,
+    startTs: "",
+    endTs: "",
     transportation: 'walking',
     description: '',
     location: '',
