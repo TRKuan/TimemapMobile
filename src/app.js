@@ -109,11 +109,9 @@ export default class App extends React.Component {
         };
         persistStore(store, {storage: AsyncStorage}, () => {
             store.dispatch(initCalendar());
-
             this.setState({
                 loading: false
             });
-            clearInterval(this.loadingId);
         });
     }
     render() {
