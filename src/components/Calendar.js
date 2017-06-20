@@ -17,7 +17,6 @@ import {CalendarList} from 'react-native-calendars';
 import EventsListModal from './EventsListModal.js';
 import NewEventModal from './NewEventModal.js';
 
-import ActionButton from 'react-native-action-button';
 
 export default class Calendar extends Component {
   static navigationOptions = {
@@ -151,7 +150,7 @@ export default class Calendar extends Component {
         modalDidOpen={() => console.log(' add modal did open')}
         modalDidClose={this.hideAddModal}
         modalStyle={{padding: 0, borderRadius: 5, margin: 0}}>
-          <View style={{backgroundColor: '#fff', height: 607}}>
+          <View style={{backgroundColor: '#fff', height: 552}}>
             <View style={{flex: 1}}>
               <NewEventModal />
             </View>

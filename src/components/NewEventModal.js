@@ -69,7 +69,7 @@ export default class NewEventModal extends Component {
       </View>
     );
       return (
-      <View style={{flex: 1}}>
+      <View style={{height: 100}}>
         <View style={styles.newEventHeader}>
           <Text style={styles.newEventHeaderText}>New Event</Text>
         </View>
@@ -98,6 +98,7 @@ export default class NewEventModal extends Component {
             <View style={[styles.cancel, styles.border]}></View>
           </View>
         </ScrollView>
+
       </View>
     );
   }
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     color: "#888",
   },
  newEventHeader: {
-   flex: 1,
+   height: 100,
    backgroundColor: '#09bdac',
    justifyContent: 'center'
  },
@@ -125,65 +126,65 @@ const styles = StyleSheet.create({
    marginLeft: 25
  },
  newEventForm: {
-   flex: 5,
+   height: 300,
    backgroundColor: '#FFF',
    padding: 15
  },
  title: {
-   flex: 1
+   height: 100
  },
  time: {
-   flex: 1,
+   height: 100,
    flexDirection: 'row'
  },
  start: {
-   flex: 1
+   height: 100
  },
  startDate: {
-   flex: 1
+   height: 100
  },
  startTime: {
-   flex: 1
+   height: 100
  },
  end: {
-   flex: 1
+   height: 100
  },
  endDate: {
-   flex: 1
+   height: 100
  },
  endTime: {
-   flex: 1
+   height: 100
  },
  label: {
-   flex: 1
+   height: 100
  },
  transportation: {
-   flex: 1
+   height: 100
  },
  description: {
-   flex: 1
+   height: 100
  },
  location: {
-   flex: 1
+   height: 100
  },
  map: {
-   flex: 1
+   height: 100
  },
  formButtons: {
-   flex: 1,
+   height: 100,
    flexDirection: 'row'
  },
  submit: {
-   flex: 1
+   height: 100
  },
  cancel:{
-   flex: 1
+   height: 100
  },
  titleText: {
-   flex: 1
+   height: 100
  },
  titleInput: {
-   flex: 1
+   height: 100
  }
 
 });
