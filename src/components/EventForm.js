@@ -10,6 +10,7 @@ import {
 import {Container, Content, Form, Item, Input, Label, Button, ListItem, Radio} from 'native-base';
 import {connect} from 'react-redux';
 import {submitForm, cleanForm} from '../states/events-form-actions';
+import Map from './Map.js';
 
 import moment from 'moment';
 
@@ -18,9 +19,8 @@ import theme from '../theme.js';
 
 class EventForm extends Component {
     static navigationOptions = {
-      tabBarLabel: 'New Event'
+        title: "Add Evnet"
     };
-
     constructor(props){
         super(props);
         this.state = {
@@ -31,7 +31,10 @@ class EventForm extends Component {
             description: '',
             location: '',
             geoLocation: {},
-            timeInvalid: true
+            timeInvalid: true,
+            walking: true,
+            dirving: false,
+            cycling: false
         };
     }
 
@@ -42,8 +45,10 @@ class EventForm extends Component {
               <Form>
                 <Item style={{margin: 10}} floatingLabel>
                   <Label>Title</Label>
-                  <Input/>
+                  <Input onChange={(e) => this.setState({title: e.nativeEvent.text})}/>
                 </Item>
+
+                <View style={{margin: 10}}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Button style={{margin: 10, width:110}} primary onPress={() => this.onStartTimeClicked()}>
                       <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Start Time</Text>
@@ -56,7 +61,59 @@ class EventForm extends Component {
                     </Button>
                     <Text style={{color: this.state.timeInvalid?'red':theme.themeColorDark, flex:1, textAlign: 'center', fontSize: 17}}>{this.state.endTime?this.state.endTime.format('MMM D, YYYY ddd hh:mm a'):""}</Text>
                   </View>
+                </View>
+
+                <View style={{margin:10}}>
+                  <Label>Transportation</Label>
+                  <ListItem>
+                    <Radio
+                      onPress={() => this.setState({
+                        walking: !this.state.walking,
+                        driving: false,
+                        cycling: false,
+                        transportation: 'walking',
+                      })}
+                      selected={this.state.walking} />
+                      <Text>Walking</Text>
+                  </ListItem>
+                  <ListItem>
+                    <Radio
+                      onPress={() => this.setState({
+                        walking: false,
+                        driving: !this.state.driving,
+                        cycling: false,
+                        transportation: 'driving',
+                      })}
+                      selected={this.state.driving} />
+                      <Text>Driving</Text>
+                  </ListItem>
+                  <ListItem>
+                    <Radio
+                      onPress={() => this.setState({
+                        walking: false,
+                        driving: false,
+                        cycling: !this.state.cycling,
+                        transportation: 'cycling',
+                      })}
+                      selected={this.state.cycling} />
+                      <Text>Cycling</Text>
+                  </ListItem>
+                </View>
+
+                <Item style={{margin: 10}} floatingLabel>
+                  <Label>Description</Label>
+                  <Input onChange={(e) => this.setState({description: e.nativeEvent.text})}/>
+                </Item>
+
+                <Item style={{margin: 10}} floatingLabel>
+                  <Label>Location</Label>
+                  <Input onChange={(e) => this.setState({location: e.nativeEvent.text})}/>
+                </Item>
               </Form>
+              <Map style={{height: 500, margin: 50}} pinable={true} showNextEvent={false} />
+              <Button style={{margin: 50}} block primary onPress={() => this.props.navigation.navigate('AddEventMap')}>
+                <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Next</Text>
+              </Button>
             </Content>
           </Container>
         );
