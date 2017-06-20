@@ -1,5 +1,5 @@
 import React from 'react';
-import {AsyncStorage, Text, View, ProgressBarAndroid} from 'react-native';
+import {BackHandler, AsyncStorage, Text, View, ProgressBarAndroid} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
@@ -49,6 +49,20 @@ class AppWithStyleAndNavigator extends React.Component {
                 })}/>
             </Container>
         );
+    }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            const {dispatch, nav} = this.props;
+            if (nav.index === 0)
+                return false;
+            dispatch(NavigationActions.back());
+            return true;
+        });
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress');
     }
 }
 
