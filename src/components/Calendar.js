@@ -6,10 +6,12 @@ import {
   ScrollView,
 } from 'react-native';
 
-
+import {connect} from 'react-redux';
 import { Fab, Button, Container, Content } from 'native-base';
 import FAB from 'react-native-fab'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {setDay} from '../states/calendar-actions.js'
+
 //import Icon from 'react-native-vector-icons/Ionicons';
 
 import Modal from 'react-native-simple-modal';
@@ -18,7 +20,7 @@ import EventsListModal from './EventsListModal.js';
 import NewEventModal from './NewEventModal.js';
 
 
-export default class Calendar extends Component {
+class Calendar extends Component {
   static navigationOptions = {
     tabBarLabel: 'Calendar'
   };
@@ -27,38 +29,26 @@ export default class Calendar extends Component {
 
     this.state = {
       selected: '2017-06-18',
-      markedDays: {
-        '2017-06-18': {marked: true, selected: true},
-        '2017-06-30': {marked: true},
-        '2017-07-30': {marked: true},
-      },
       isEventModalVisible: false,
       fabActive: false,
+      markedDays: {}
     }
     this.onDayPress = this.onDayPress.bind(this);
   }
 
   showEventModal = () => this.setState({ isEventModalVisible: true })
   hideEventModal = () => this.setState({ isEventModalVisible: false })
+
   onDayPress(day) {
-    let tempMarked = {};
-    for(i in this.state.markedDays){
-      tempMarked[i] = this.state.markedDays[i];
-    }
-    if(tempMarked[this.state.selected]){
-      if(tempMarked[this.state.selected]['marked']){
-        tempMarked[this.state.selected] = {marked: true};
-      }
-      else{
-        tempMarked[this.state.selected] = {};
-      }
-    }
+    this.props.dispatch(setDay(day)).then(()=>{
+      this.showEventModal();
+    });
+    let tempMarked = JSON.stringify(this.props.monthHasEvent);
+    tempMarked = JSON.parse(tempMarked);
+
     if(tempMarked[day.dateString]){
       if(tempMarked[day.dateString]['marked']){
         tempMarked[day.dateString] = {marked: true, selected: true};
-      }
-      else{
-        tempMarked[day.dateString] = {selected: true};
       }
     }
     else{
@@ -68,11 +58,11 @@ export default class Calendar extends Component {
       selected: day.dateString,
       markedDays: tempMarked
     });
-    this.showEventModal();
+
   }
+
   onPressFab = () => {
     this.showAddModal();
-
   }
   showAddModal = () => this.setState({ isAddModalVisible: true })
   hideAddModal = () => this.setState({ isAddModalVisible: false })
@@ -100,33 +90,6 @@ export default class Calendar extends Component {
         markedDates={this.state.markedDays}
       />
     );
-    const calendarListModal = (
-      <Container>
-        {calendarList}
-        <Modal
-        offset={this.state.offset}
-        animationDuration={600}
-        animationTension={30}
-        overlayBackground={'rgba(0, 0, 0, 0.6)'}
-        open={true}
-        modalDidOpen={() => console.log('modal did open')}
-        modalDidClose={this.hideEventModal}
-        modalStyle={{padding: 0, borderRadius: 5}}>
-          <EventsListModal date={this.state.selected}/>
-        </Modal>
-
-        <Fab
-            active={this.state.fabActive}
-            containerStyle={{ padding: 20 }}
-            style={{ backgroundColor: '#17dfab', margin: 40 }}
-            onPress={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: true })}>
-            <Icon name="plus" />
-        </Fab>
-      </Container>
-
-
-    );
-
     return (
       <View style={{ flex: 1, backgroundColor: '#fff'}}>
         {calendarList}
@@ -198,3 +161,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+export default connect((state) => {
+    return {
+      ...state.calendar
+    };
+})(Calendar);
