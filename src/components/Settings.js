@@ -71,12 +71,12 @@ export default class Settings extends Component {
     const { user } = this.state;
     return (
       <View style={styles.container}>
-        <Text>Settings</Text>
         { user
           ? // Show user info if already logged in
             <View style={styles.content}>
               <Text style={styles.header}>
-                Welcome {user.name}!
+                Welcome {user.name}!{'\n'}
+                your id {user.id}
               </Text>
               <View style={styles.avatar}>
                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
@@ -97,7 +97,7 @@ export default class Settings extends Component {
             </View>
         }
         { user?
-          <View>
+          <View style={styles.buttons}>
             <Icon.Button
             name="facebook"
             backgroundColor="#3b5998"
@@ -107,24 +107,35 @@ export default class Settings extends Component {
             </Icon.Button>
           </View>
           :
-          <View>
-          <Icon.Button name="google"
-          backgroundColor="#4285f4" title="Login" onPress={this.loginWithGoogle} >
-            Login with Google
-          </Icon.Button>
-          <Icon.Button
+          <View style={styles.buttons}>
+            <Icon.Button
+            name="google"
+            backgroundColor="#4285f4"
+            title="Login"
+            onPress={this.loginWithGoogle}
+            {...iconStyles}
+            >
+              Login with Google
+            </Icon.Button>
+            <Icon.Button
               name="facebook"
               backgroundColor="#3b5998"
               onPress={this.loginWithFacebook}
-          >
-            Login with Facebook
-          </Icon.Button>
-        </View>
+              {...iconStyles}
+            >
+              Login with Facebook
+            </Icon.Button>
+          </View>
       }
       </View>
     );
   }
 }
+
+const iconStyles = {
+  borderRadius: 10,
+  iconStyle: { paddingVertical: 5 },
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -157,9 +168,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttons: {
+    flex: 0.3,
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    margin: 20,
+    margin: 0,
     marginBottom: 30,
+    //alignItems: 'center'
   }
 });
