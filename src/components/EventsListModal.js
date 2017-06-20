@@ -50,15 +50,7 @@ class EventsListModal extends Component {
         }
     }
 
-    const eventItem = (
-      <View style={styles.item}>
-        <View style={styles.eventName}><Text>Event</Text></View>
-        <View style={styles.eventTime}><Text>Location</Text></View>
-        <View style={styles.eventLocation}><Text>Time</Text></View>
-      </View>
-    );
-
-    return (
+    const withPlusButton = (
       <View>
         <View style={{padding: 0, height: 80}}>
           <View style={styles.dayHeader}>
@@ -77,6 +69,22 @@ class EventsListModal extends Component {
                   </Icon>
                 </TouchableOpacity>
               </View>
+            </View>
+          </View>
+        </View>
+        <ScrollView style={{maxHeight: 390, paddingBottom: 5}}>
+          {children}
+        </ScrollView>
+      </View>
+    );
+
+    return (
+      <View>
+        <View style={{padding: 0, height: 80}}>
+          <View style={styles.dayHeader}>
+            <View>
+              <Text style={styles.eventsText}>Events</Text>
+              <Text style={styles.dayHeaderText}>{this.state.eventHeaderDate}</Text>
             </View>
           </View>
         </View>
