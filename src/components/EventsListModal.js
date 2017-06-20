@@ -41,7 +41,6 @@ class EventsListModal extends Component {
             <Text style={styles.darkColorText}>No Events. Time to relax!</Text>
         </View>
     );
-
     if(events){
         if (events.length) {
             children = events.map((e, i) => (
@@ -88,7 +87,7 @@ class EventsListModal extends Component {
             </View>
           </View>
         </View>
-        <ScrollView style={{maxHeight: 390, paddingBottom: 5}}>
+        <ScrollView style={{maxHeight: 390, padding: 5, }}>
           {children}
         </ScrollView>
       </View>

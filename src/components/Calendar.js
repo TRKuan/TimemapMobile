@@ -29,27 +29,27 @@ class Calendar extends Component {
     super(props);
 
     this.state = {
-      selected: '2017-06-18',
+      selected: '2017-06-20',
       isEventModalVisible: false,
       fabActive: false,
-      markedDays: this.props.monthHasEvent
+      markedDays: {}
     }
     this.onDayPress = this.onDayPress.bind(this);
   }
-  /*
+
   componentDidMount(){
-    this.props.dispatch(setDay(day.dateString));
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
     this.setState({
       markedDays: tempMarked
     });
   }
-  */
+
   showEventModal = () => this.setState({ isEventModalVisible: true })
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
+
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
 
@@ -68,7 +68,7 @@ class Calendar extends Component {
     this.props.dispatch(setDay(day.dateString)).then(()=>{
       this.showEventModal();
     });
-
+    
   }
 
   onPressFab = () => {
