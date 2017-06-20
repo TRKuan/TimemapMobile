@@ -1,5 +1,5 @@
 import React from 'react';
-import {BackHandler, AsyncStorage, Text, View, ActivityIndicator} from 'react-native';
+import {BackHandler, AsyncStorage, Text, View, ProgressBarAndroid} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
@@ -124,15 +124,14 @@ export default class App extends React.Component {
                     alignItems: 'center'
                   }}
                 >
-                    <View style={{flex:5}}/>
-                    <View style={{flex:3}}>
-                      <ActivityIndicator color={theme.themeColorLight}/>
+                    <View style={{height:"60%", width:"100%"}}/>
+                    <View style={{height:"40%", width:"100%", alignItems: 'center'}}>
                       <Text
                         style={{
                           fontSize:16,
                           color: theme.themeColorLight,
-
-                        }}>Loading...</Text>
+                        }}>Loading...{"\n"}</Text>
+                        <ProgressBarAndroid style={{width:"70%"}} color={theme.themeColorLight} styleAttr={"Horizontal"} />
                     </View>
                 </View>
             );
