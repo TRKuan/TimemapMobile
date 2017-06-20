@@ -64,6 +64,8 @@ class Settings extends Component {
 
   logout = () => this.setState({
     user: undefined
+  }, () => {
+    this.props.dispatch(setUserId("nouser"));
   });
 
   // Open URL in a browser
