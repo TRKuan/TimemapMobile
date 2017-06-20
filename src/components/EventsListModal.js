@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {getDayEvents} from '../states/calendar-actions';
-import EventItem from './EventItem.js'
+import EventItem from './EventItem.js';
 
 class EventsListModal extends Component {
   constructor(props) {
@@ -41,6 +41,7 @@ class EventsListModal extends Component {
             <Text style={styles.darkColorText}>No Events. Time to relax!</Text>
         </View>
     );
+
     if(events){
         if (events.length) {
             children = events.map((e, i) => (
@@ -48,6 +49,7 @@ class EventsListModal extends Component {
             ));
         }
     }
+
     const eventItem = (
       <View style={styles.item}>
         <View style={styles.eventName}><Text>Event</Text></View>
@@ -78,7 +80,7 @@ class EventsListModal extends Component {
             </View>
           </View>
         </View>
-        <ScrollView style={{maxHeight: 390}}>
+        <ScrollView style={{maxHeight: 390, paddingBottom: 5}}>
           {children}
         </ScrollView>
       </View>

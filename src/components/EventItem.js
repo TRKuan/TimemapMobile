@@ -8,19 +8,21 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
-class EventItem extends Component {
+export default class EventItem extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
+
     const startTime = moment(this.props.startTs).format('LT');
     const endTime = moment(this.props.endTs).format('LT');
+    console.log('in event item: startTime', startTime)
 
     return (
       <View style={styles.item}>
         <View style={styles.eventName}><Text style={styles.darkColorText}>{this.props.title}</Text></View>
-        <View style={styles.eventTime}><Text style={styles.darkColorText}>&nbsp;&nbsp;{startTime}</Text></View>
+        <View style={styles.eventTime}><Text style={styles.darkColorText}>{startTime}</Text></View>
         <View style={styles.eventLocation}><Text style={styles.darkColorText}>{this.props.location}</Text></View>
       </View>
     );

@@ -49,9 +49,6 @@ class Calendar extends Component {
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
-    this.props.dispatch(setDay(day.dateString)).then(()=>{
-      this.showEventModal();
-    });
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
 
@@ -66,6 +63,9 @@ class Calendar extends Component {
     this.setState({
       selected: day.dateString,
       markedDays: tempMarked
+    });
+    this.props.dispatch(setDay(day.dateString)).then(()=>{
+      this.showEventModal();
     });
 
   }
