@@ -76,7 +76,8 @@ export default class Settings extends Component {
           ? // Show user info if already logged in
             <View style={styles.content}>
               <Text style={styles.header}>
-                Welcome {user.name}!
+                Welcome {user.name}!{'\n'}
+                your id {user.id}
               </Text>
               <View style={styles.avatar}>
                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
