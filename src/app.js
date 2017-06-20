@@ -1,5 +1,5 @@
 import React from 'react';
-import {BackHandler, AsyncStorage, Text, View} from 'react-native';
+import {BackHandler, AsyncStorage, Text, View, ActivityIndicator} from 'react-native';
 
 
 import {createStore, combineReducers, compose, applyMiddleware} from 'redux';
@@ -126,6 +126,7 @@ export default class App extends React.Component {
                 >
                     <View style={{flex:5}}/>
                     <View style={{flex:3}}>
+                      <ActivityIndicator color={theme.themeColorLight}/>
                       <Text
                         style={{
                           fontSize:16,
