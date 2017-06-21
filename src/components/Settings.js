@@ -51,9 +51,10 @@ class Settings extends Component {
       // Decode the user string and parse it into JSON
       user: JSON.parse(decodeURI(user_string))
     }, () => {
-      this.props.dispatch(setUserId(this.state.id));
-      if(this.props.onUserIdChanged)
-        this.props.onUserIdChanged(this.state.id);
+      this.props.dispatch(setUserId(this.state.user.id));
+      if(this.props.onUserIdChanged){
+        this.props.onUserIdChanged(this.state.user.id);
+      }
     });
 
     if (Platform.OS === 'ios') {
@@ -72,7 +73,7 @@ class Settings extends Component {
   }, () => {
     this.props.dispatch(setUserId("no user"));
     if(this.props.onUserIdChanged)
-      this.props.onUserIdChanged(this.state.id);
+      this.props.onUserIdChanged("no user");
   });
 
   // Open URL in a browser
