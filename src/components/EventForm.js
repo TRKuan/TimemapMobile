@@ -25,7 +25,8 @@ class EventForm extends Component {
         this.state = {
             ...this.props.eventForm,
             startTs: this.props.eventForm.startTs?moment(this.props.eventForm.startTs):null,
-            endTs: this.props.eventForm.endTs?moment(this.props.eventForm.endTs):null
+            endTs: this.props.eventForm.endTs?moment(this.props.eventForm.endTs):null,
+            titleValid: true
         };
     }
 
@@ -39,9 +40,9 @@ class EventForm extends Component {
           <Container>
             <Content style={{backgroundColor: '#F5FCFF'}}>
               <Form>
-                <Item style={{margin: 10}} floatingLabel>
+                <Item style={{margin: 10}} floatingLabel error={!this.state.titleValid}>
                   <Label>Title</Label>
-                  <Input value={this.state.title} onChange={(e) => this.setState({title: e.nativeEvent.text})}/>
+                  <Input value={this.state.title} onChange={(e) => this.setState({title: e.nativeEvent.text, titleValid: true})}/>
                 </Item>
 
                 <View style={{margin: 10}}>
@@ -106,12 +107,41 @@ class EventForm extends Component {
                   <Input value={this.state.location} onChange={(e) => this.setState({location: e.nativeEvent.text})}/>
                 </Item>
               </Form>
-              <Button style={{margin: 50}} block primary onPress={() => this.props.navigation.navigate('AddEventMap')}>
+              <Button style={{margin: 50}} block primary onPress={() => this.handleSubmit()}>
                 <Text style={{color: theme.themeColorLight, flex: 1, textAlign: 'center'}}>Next</Text>
               </Button>
             </Content>
           </Container>
         );
+    }
+
+    handleSubmit(){
+        if(!this.state.title){
+            this.setState({
+                titleValid: false
+            });
+            Alert.alert(
+              'Invalid Title',
+              'Must have title',
+              [
+                {text: 'OK'},
+              ],
+              { cancelable: false }
+            );
+            return;
+        }
+        if(this.state.timeInvalid){
+          Alert.alert(
+            'Invalid Time',
+            'Time not valid',
+            [
+              {text: 'OK'},
+            ],
+            { cancelable: false }
+          );
+            return;
+        }
+        this.props.navigation.navigate('AddEventMap');
     }
 
   async onStartTimeClicked(){
@@ -186,7 +216,7 @@ class EventForm extends Component {
                 {text: 'OK'},
               ],
               { cancelable: false }
-            )
+            );
       }
   }
 
