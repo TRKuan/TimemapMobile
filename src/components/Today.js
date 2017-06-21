@@ -13,10 +13,78 @@ import theme from '../theme.js';
 import PushContoller from './PushContoller.js';
 import PushNotification from 'react-native-push-notification';
 
+const backgroundColors= {normal: theme.themeColorDark, ok: '#17dfab', leave: '#fe003d'};
+
+var leaveTimeInterval = null;
 class Today extends Component {
+
     static navigationOptions = {
       tabBarLabel: 'Home'
     };
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        infoBackground: backgroundColors.normal,
+        message: 'Na'
+      }
+    }
+
+    componentDidMount(){
+      leaveTimeInterval = setInterval(this.updateLeaveTime, 240000);
+      this.updateLeaveTime();
+    }
+
+    componentWillUnmount(){
+      clearInterval(leaveTimeInterval);
+    }
+
+    updateLeaveTime = () => {
+      let notifyFlag = false;
+      //console.log(this.props.leaveTime);
+      //console.log(this.props.nextEvent);
+      let m = this.state.message;
+      let ibc = this.state.infoBackground;
+
+      if(this.props.leaveTime >= 60 ){
+        let intTime = parseInt(this.props.leaveTime);
+        m = `Leave in ${intTime} mins.`;
+      }else if(this.props.leaveTime < 60){
+        m = 'Leave Right NOW!';
+      }
+
+      if(this.props.leaveTime <= 300){
+        ibc = backgroundColors.leave;
+        notifyFlag = true;
+      }else if(this.props.leaveTime <= -900){
+        notifyFlag = false;
+      }
+
+      this.setState({
+        infoBackground: ibc,
+        message : m
+      },()=>{
+        if(notifyFlag){
+          this.notify();
+        }
+      });
+    }
+    notify = () =>{
+      /*----Push Notification Test----------*/
+      PushNotification.localNotification({
+          /* iOS and Android properties */
+          title: "Timemap Reminder",
+          message: this.state.message,
+          playSound: true,
+          soundName: 'default',
+          /* Android Only Properties */
+          autoCancel: true, // (optional) default: true
+          subText: "Timemap", // (optional) default: none
+          color: "red", // (optional) default: system default
+          vibrate: true, // (optional) default: true
+          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+      });
+    }
 
     render() {
         const {navigate} = this.props.navigation;
@@ -27,7 +95,7 @@ class Today extends Component {
                     <Text style={styles.todayDateText}>{moment().format('MMM D, YYYY')}</Text>
                     <Text style={styles.todayDateOfWeekText}>{moment().format('dddd')}</Text>
                 </View>
-                <View style={styles.info}>
+                <View style={[styles.info, {backgroundColor: this.state.infoBackground}]}>
                   <View>
                     <Text style={[styles.textLight,{ marginBottom: 4, fontSize: size*1}]}><Icon name="bullseye" size={size} color={theme.themeColorLight} />&nbsp;&nbsp; Next Event{"\n"}</Text>
                     <Text style={[styles.textLight, {marginBottom: size, fontSize: size*2, paddingLeft:size*1.8, borderLeftWidth:7, borderColor:"rgb(56, 237, 123)"}]}>{this.props.title}</Text>
@@ -63,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 7,
     justifyContent: 'center',
     paddingLeft: size*3,
-    backgroundColor: theme.themeColorDark,
+    backgroundColor: theme.themeColorDark
   },
   textLight: {
     fontSize: size,

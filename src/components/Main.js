@@ -30,7 +30,6 @@ export default class Main extends React.Component {
       title: "Timemap"
     };
     render() {
-        console.log(this.props);
         return (
           <AppNavigator />
         );

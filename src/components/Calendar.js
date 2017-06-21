@@ -66,27 +66,9 @@ class Calendar extends Component {
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
-    this.props.dispatch(NavigationActions.navigate({routeName: 'Events'}));
-    this.props.dispatch(setDay(day.dateString));
-    /*----Push Notification Test----------*/
-
-    PushNotification.localNotification({
-        /* iOS and Android properties */
-        title: "Timemap Reminder",
-        message: "Leave in 5 mins!",
-        playSound: true,
-        soundName: 'default',
-        /* Android Only Properties */
-        autoCancel: true, // (optional) default: true
-        subText: "Timemap 關心您", // (optional) default: none
-        color: "red", // (optional) default: system default
-        vibrate: true, // (optional) default: true
-        vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-
-
-
+    this.props.dispatch(setDay(day.dateString)).then(()=>{
+      this.props.dispatch(NavigationActions.navigate({routeName: 'Events'}));
     });
-
   }
 
 
