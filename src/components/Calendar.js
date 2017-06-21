@@ -66,8 +66,8 @@ class Calendar extends Component {
     }
   }
 
-
   showEventModal = () => this.setState({ isEventModalVisible: true })
+
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
@@ -90,9 +90,7 @@ class Calendar extends Component {
     });
   }
 
-  onPressFab = () => {
-    this.showAddModal();
-  }
+
   showAddModal = () => this.setState({ isAddModalVisible: true })
   hideAddModal = () => this.setState({ isAddModalVisible: false })
 
