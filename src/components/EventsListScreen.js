@@ -18,24 +18,14 @@ import EventItem from './EventItem.js';
 class EventsListScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       offset: 0,
-      eventHeaderDate: 'Na'
     }
-
-  }
-  componentWillMount(){
-    const date = this.props.date;
-    const dateString = moment(date).format('MMMM D,   YYYY');
-    console.log(dateString);
-    this.setState({
-      eventHeaderDate: dateString
-    });
   }
 
   render() {
     const events = this.props.dayEvents;
+    const pickedDay = moment(this.props.pickedDay).format('MMMM D,   YYYY');
     let children = (
         <View style={styles.empty}>
             <Text style={styles.darkColorText}>No Events. Time to relax!</Text>
@@ -57,7 +47,7 @@ class EventsListScreen extends Component {
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
                 <Text style={styles.eventsText}>Events</Text>
-                <Text style={styles.dayHeaderText}>{this.state.eventHeaderDate}</Text>
+                <Text style={styles.dayHeaderText}>{pickedDay}</Text>
               </View>
               <View style={{ justifyContent: 'center', marginRight: 15}}>
                 <TouchableOpacity onPress={() => this.setState({isModalVisible: false})}>
@@ -83,7 +73,7 @@ class EventsListScreen extends Component {
           <View style={styles.dayHeader}>
             <View>
               <Text style={styles.eventsText}>Events</Text>
-              <Text style={styles.dayHeaderText}>{this.state.eventHeaderDate}</Text>
+              <Text style={styles.dayHeaderText}>{pickedDay}</Text>
             </View>
           </View>
         <ScrollView style={{height: '83.5%', padding: 5, paddingTop: 10, backgroundColor: 'rgb(238, 232, 232)'}}>
@@ -138,12 +128,12 @@ const styles = StyleSheet.create({
  eventsText:{
    color: '#fff',
    fontSize: 16,
-   alignSelf: 'center'
+
  },
  dayHeaderText: {
    color: '#fff',
    fontSize: 22,
-   alignSelf: 'center'
+   
  },
  eventName:{
    flex: 1,
@@ -158,5 +148,6 @@ const styles = StyleSheet.create({
 });
 
 export default connect(state => ({
-    dayEvents: state.calendar.dayEvents
+    dayEvents: state.calendar.dayEvents,
+    pickedDay: state.calendar.pickedDay,
 }))(EventsListScreen);
