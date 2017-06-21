@@ -11,7 +11,8 @@ const initCalendarState = {
     leaveTime: 0,
     leaveTimeId:0,
     nextBack: 'normal-back',
-    notified: false
+    notified: false,
+    getDayLoading: false
 };
 
 export function calendar(state = initCalendarState, action) {
@@ -87,12 +88,14 @@ export function calendar(state = initCalendarState, action) {
         }
     case '@CALENDAR/GET_DAY_EVENTS_START':
         return {
-            ...state
+            ...state,
+            getDayLoading: true
         }
     case '@CALENDAR/GET_DAY_EVENTS_END':
         return {
             ...state,
-            dayEvents: action.events
+            dayEvents: action.events,
+            getDayLoading: false
         }
     case '@CALENDAR/SET_PICKED_DAY':
         return {

@@ -109,6 +109,7 @@ export default class App extends React.Component {
         };
         persistStore(store, {storage: AsyncStorage}, () => {
             store.dispatch(initCalendar());
+            //store.dispatch(setUserId('b2be9269-aa0d-4e0d-9b51-bf17c86a867a'));
             this.setState({
                 loading: false
             });
