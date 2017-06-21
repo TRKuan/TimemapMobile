@@ -154,6 +154,7 @@ class Settings extends Component {
         </View>
         )
       }else {
+        //if you have trouble about user's image, delete "+'0'" .
         return(
           <View style={{flex: 1, backgroundColor: theme.themeColorDark}}>
             <View style={styles.topPanelAfter}>
