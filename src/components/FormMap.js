@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Dimensions, StyleSheet, View, Text} from 'react-native';
 import {Container, Header, Left, Body, Right, Content, Icon, Title, Button} from 'native-base';
 import {connect} from 'react-redux';
+import moment from 'moment';
 import {cleanForm} from '../states/events-form-actions';
 import {addEvent} from '../states/calendar-actions';
 import Map from './Map.js';
@@ -42,11 +43,11 @@ class FormMap extends Component {
           location: this.props.eventForm.location,
           lng: this.props.pinPosition.longitude,
           lat: this.props.pinPosition.latitude,
-          startTs: this.props.eventForm.startTs.toISOString(),
-          endTs: this.props.eventForm.endTs.toISOString(),
+          startTs: moment(this.props.eventForm.startTs).toISOString(),
+          endTs: moment(this.props.eventForm.endTs).toISOString(),
           title: this.props.eventForm.title,
           description: this.props.eventForm.description,
-          trans: this.props.eventForm.trans
+          trans: this.props.eventForm.transportation
         }));
         this.props.dispatch(cleanForm());
       }catch(err){
