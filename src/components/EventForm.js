@@ -18,7 +18,7 @@ import theme from '../theme.js';
 
 class EventForm extends Component {
     static navigationOptions = {
-        title: "Add Evnet"
+        title: "Add Event"
     };
     constructor(props){
         super(props);

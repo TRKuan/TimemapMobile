@@ -12,7 +12,7 @@ import {NavigationActions} from 'react-navigation';
 
 class FormMap extends Component {
     static navigationOptions = {
-        title: "Add Evnet",
+        title: "Set Event Location",
     };
     render() {
         return (
