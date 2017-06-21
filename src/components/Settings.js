@@ -6,12 +6,15 @@ import {
   Linking,
   Text,
   View,
-  Button
 } from 'react-native';
+
+import { Button } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {connect} from 'react-redux';
 import {setUserId} from '../states/calendar-actions';
+
+import theme from '../theme.js';
 
 class Settings extends Component {
   static navigationOptions = {
@@ -81,92 +84,103 @@ class Settings extends Component {
 
   render() {
     const { user } = this.state;
+
     if(!user){
       return(
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <View style={styles.content}>
-              <Text style={styles.header}>
-                Welcome Stranger!
-              </Text>
-              <View style={styles.avatar}>
-                <Icon name="user-circle" size={100} color="rgba(0,0,0,.09)" />
-              </View>
-              <Text style={styles.text}>
-                Please log in to continue {'\n'}
-                to the Timemap
-              </Text>
-            </View>
+        <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
+          <View style={styles.topPanelBefore}>
+              <Image
+                source={require('../images/logo512.png')}
+                style={styles.logoImage}
+              />
+              <Text style={styles.logoText}>TimeMap</Text>
           </View>
-          <View style={styles.buttons}>
-            <Icon.Button
-              name="google"
-              backgroundColor="#4285f4"
-              title="Login"
-              onPress={this.loginWithGoogle}
-              {...iconStyles}
-            >
-              Login with Google
-            </Icon.Button>
-            <Icon.Button
-              name="facebook"
-              backgroundColor="#3b5998"
+          <View style={styles.bottomPanelBefore}>
+            <Button
+              bordered
+              iconLeft
               onPress={this.loginWithFacebook}
-              {...iconStyles}
+              style={{borderRadius: 15, borderWidth: 1.5, borderColor:　'#486bb5'/*theme.themeColorDark*//*Light*/, alignSelf: 'center', marginTop: 40}}
             >
-              Login with Facebook
-            </Icon.Button>
+              <Icon name="facebook" style={{color: '#486bb5'}}/>
+              <Text style={{color: '#486bb5'/*'#888'*//*theme.themeColorLight*/, marginLeft: 10}}>Sign in with Facebook</Text>
+            </Button>
+            <Button
+              bordered
+              iconLeft
+              onPress={this.loginWithGoogle}
+              style={{borderRadius: 15, borderWidth: 1.5, borderColor:　'#4285f4'/*theme.themeColorDark*//*Light*/, alignSelf: 'center', marginTop: 15}}
+            >
+              <Icon name="google" style={{color: '#4285f4'}}/>
+              <Text style={{color: '#4285f4'/*'#888'*//*theme.themeColorDarkLight*/, marginLeft: 10}}>Sign in with Google</Text>
+            </Button>
           </View>
-        </View>
+          <View style={styles.footer}>
+            <Text style={styles.slogan}>Map Your Time. Map Your Life.</Text>
+          </View>
+      </View>
+
       );
     }else {
       if(user.source === "Facebook"){
         return(
-          <View style={styles.container}>
-            <View style={styles.content}>
+          <View style={{flex: 1, backgroundColor: theme.themeColorDark}}>
+            <View style={styles.topPanelAfter}>
               <Text style={styles.header}>
-                Welcome {user.name}!{'\n'}
-                your id {user.id}
+                Welcome,
               </Text>
               <View style={styles.avatar}>
                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
               </View>
+              <Text style={styles.userName}>
+                {user.name}!
+              </Text>
             </View>
-            <View style={styles.buttons}>
-              <Icon.Button
-              name="facebook"
-              backgroundColor="#3b5998"
-              onPress={this.logout}
-              {...iconStyles}
+            <View style={styles.bottomPanelAfter}>
+              <Button
+                bordered
+                iconLeft
+                onPress={this.logout}
+                style={{borderRadius: 15, borderWidth: 1.5, borderColor:　'#486bb5'/*theme.themeColorDark*//*Light*/, alignSelf: 'center', marginTop: 40}}
               >
-                Logout with Facebook
-              </Icon.Button>
+                <Icon name="facebook" style={{color: '#486bb5'}}/>
+                <Text style={{color: '#486bb5'/*'#888'*//*theme.themeColorLight*/, marginLeft: 10}}>Logout of Facebook</Text>
+              </Button>
             </View>
-          </View>
+            <View style={styles.footer}>
+              <Text style={styles.slogan}>Map Your Time. Map Your Life.</Text>
+            </View>
+        </View>
         )
       }else {
         return(
-          <View style={styles.container}>
-            <View style={styles.content}>
-              <Text style={styles.header}>
-                Welcome {user.name}!{'\n'}
-                your id {user.id}
-              </Text>
-              <View style={styles.avatar}>
-                <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
-              </View>
+          <View style={{flex: 1, backgroundColor: theme.themeColorDark}}>
+            <View style={styles.topPanelAfter}>
+                <Text style={styles.header}>
+                  Welcome,
+                </Text>
+                <View style={styles.avatar}>
+                  <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+                </View>
+                <Text style={styles.userName}>
+                  {user.name}!
+                </Text>
             </View>
-            <View style={styles.buttons}>
-              <Icon.Button
-              name="google"
-              backgroundColor="#4285f4"
-              onPress={this.logout}
-              {...iconStyles}
+            <View style={styles.bottomPanelAfter}>
+              <Button
+                bordered
+                iconLeft
+                onPress={this.logout}
+                style={{borderRadius: 15, borderWidth: 1.5, borderColor:　'#4285f4'/*theme.themeColorDark*//*Light*/, alignSelf: 'center', marginTop: 40}}
               >
-                Logout with Google
-              </Icon.Button>
+                <Icon name="google" style={{color: '#4285f4'}}/>
+                <Text style={{color: '#4285f4'/*'#888'*//*theme.themeColorLight*/, marginLeft: 10}}>Logout of Google</Text>
+              </Button>
             </View>
-          </View>
+            <View style={styles.footer}>
+              <Text style={styles.slogan}>Map Your Time. Map Your Life.</Text>
+            </View>
+        </View>
         )
       }
     }
@@ -179,45 +193,75 @@ const iconStyles = {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   avatar: {
     margin: 20,
+    justifyContent: 'center'
   },
   avatarImage: {
-    borderRadius: 50,
-    height: 100,
-    width: 100,
+    borderRadius: 64,
+    height: 128,
+    width: 128,
+    alignSelf: 'center'
   },
   header: {
-    fontSize: 20,
+    fontSize: 30,
     textAlign: 'center',
-    margin: 10,
   },
-  text: {
-    textAlign: 'center',
-    color: '#333',
-    marginBottom: 5,
-  },
-  buttons: {
-    flex: 0.3,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    margin: 0,
-    marginBottom: 30,
-    //alignItems: 'center'
-  }
-});
+  userName: {
+    fontSize: 30,
+    alignSelf: 'center',
 
+  },
+  topPanelBefore: {
+    height: '60%',
+    justifyContent: 'center',
+    backgroundColor: theme.themeColorDark,
+
+  },
+  bottomPanelBefore: {
+    height: '30%',
+    justifyContent: 'center',
+  },
+  footer: {
+    height: '10%',
+
+    justifyContent: 'center'
+  },
+  logoImage: {
+    width: 128,
+    height: 128,
+    alignSelf: 'center',
+  },
+  logoText: {
+    color: theme.themeColorLight,
+    fontSize: 24,
+    marginTop: 10,
+    alignSelf: 'center',
+
+  },
+  slogan: {
+    alignSelf: 'center',
+    color: '#aaa',
+    marginTop: 10
+  },
+  btns: {
+    borderRadius: 15,
+    borderWidth: 1.5,
+    borderColor:　theme.themeColorLight,
+    alignSelf: 'center'
+  },
+  topPanelAfter: {
+    height: '60%',
+    justifyContent: 'center',
+    backgroundColor: theme.themeColorLight,
+
+  },
+  bottomPanelAfter: {
+    height: '30%',
+    justifyContent: 'center',
+    backgroundColor: theme.themeColorDark,
+  },
+});
 export default connect((state, ownProps) => ({
 
 }))(Settings);
