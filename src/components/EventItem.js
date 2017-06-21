@@ -18,7 +18,7 @@ export default class EventItem extends Component {
   }
 
   render() {
-    
+
     const startTime = moment(this.props.startTs).format('LT');
     const endTime = moment(this.props.endTs).format('LT');
 

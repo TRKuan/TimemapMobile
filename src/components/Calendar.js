@@ -18,7 +18,9 @@ import {setDay} from '../states/calendar-actions.js'
 import Modal from 'react-native-simple-modal';
 import {CalendarList} from 'react-native-calendars';
 import EventsListModal from './EventsListModal.js';
+import EventsListScreen from './EventsListScreen.js';
 import NewEventModal from './NewEventModal.js';
+import SnackBar from 'react-native-snackbar-component'
 
 
 class Calendar extends Component {
@@ -29,7 +31,7 @@ class Calendar extends Component {
     super(props);
 
     this.state = {
-      selected: '2017-06-20',
+      selected: '2017-06-21',
       isEventModalVisible: false,
       fabActive: false,
       markedDays: {}
@@ -38,18 +40,19 @@ class Calendar extends Component {
   }
 
   componentDidMount(){
+
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
     this.setState({
       markedDays: tempMarked
     });
+    this.props.dispatch(setDay(this.state.selected));
   }
 
   showEventModal = () => this.setState({ isEventModalVisible: true })
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
-
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
 
@@ -68,7 +71,8 @@ class Calendar extends Component {
     this.props.dispatch(setDay(day.dateString)).then(()=>{
       this.showEventModal();
     });
-    
+
+
   }
 
   onPressFab = () => {
@@ -100,7 +104,7 @@ class Calendar extends Component {
         markedDates={this.state.markedDays}
       />
     );
-    return (
+    const tempFull= (
       <View style={{ flex: 1, backgroundColor: '#fff'}}>
         {calendarList}
         <Modal
@@ -136,7 +140,11 @@ class Calendar extends Component {
             </Button>
           </View>
         </Modal>
-
+        <SnackBar
+          visible={this.props.getDayLoading}
+          textMessage="Loading..."
+          actionHandler={()=>{console.log("snackbar button clicked!")}}
+          actionText="Cancel"/>
         <FAB
           buttonColor="#09bdac"
           iconTextColor="#FFFFFF"
@@ -144,6 +152,59 @@ class Calendar extends Component {
           visible={!this.state.fabActive}
           iconTextComponent={<Icon name="plus" />}
         />
+      </View>
+
+    );
+    return (
+      <View style={{ flex: 1, backgroundColor: '#fff'}}>
+        <View style={{ flex: 1, backgroundColor: '#fff'}}>
+          {calendarList}
+          <Modal
+          offset={this.state.offset}
+          animationDuration={600}
+          animationTension={30}
+          overlayBackground={'rgba(0, 0, 0, 0.6)'}
+          open={this.state.isEventModalVisible}
+          modalDidOpen={() => console.log('modal did open')}
+          modalDidClose={this.hideEventModal}
+          modalStyle={{padding: 0, borderRadius: 5}}>
+            <EventsListModal date={this.state.selected}/>
+          </Modal>
+          <Modal
+          offset={this.state.offset}
+          animationDuration={600}
+          animationTension={30}
+          overlayBackground={'rgba(0, 0, 0, 0.6)'}
+          open={this.state.isAddModalVisible}
+          modalDidOpen={() => console.log(' add modal did open')}
+          modalDidClose={this.hideAddModal}
+          modalStyle={{padding: 0, borderRadius: 5, margin: 0}}>
+            <View style={{backgroundColor: '#fff', height: 552}}>
+              <View style={{flex: 1}}>
+                <NewEventModal />
+              </View>
+              <Button
+                full
+                style={{backgroundColor: '#09bdac'}}
+                onPress={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: false }) }
+              >
+                <Text style={styles.lightColorText}>Close Modal</Text>
+              </Button>
+            </View>
+          </Modal>
+          <SnackBar
+            visible={this.props.getDayLoading}
+            textMessage="Loading..."
+            actionHandler={()=>{console.log("snackbar button clicked!")}}
+            actionText="Cancel"/>
+          <FAB
+            buttonColor="#09bdac"
+            iconTextColor="#FFFFFF"
+            onClickAction={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: true })}
+            visible={!this.state.fabActive}
+            iconTextComponent={<Icon name="plus" />}
+          />
+        </View>
       </View>
 
     );
