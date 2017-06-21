@@ -224,12 +224,12 @@ export default {
 
   // Radio Button
   radioBtnSize: platform === "ios" ? 25 : 23,
-  radioSelectedColorAndroid: "#3F51B5",
+  radioSelectedColorAndroid: theme.themeColorDark,
 
   // New Variable
   radioBtnLineHeight: platform === "ios" ? 29 : 24,
 
-  radioColor: "#7e7e7e",
+  radioColor: theme.themeColorDark,
 
   get radioSelectedColor() {
     return color(this.radioColor).darken(0.2).hex();
@@ -245,7 +245,7 @@ export default {
   tabTextColor: "#222222",
 
   // Text
-  textColor: "#000",
+  textColor: theme.themeColorDark,
   inverseTextColor: theme.themeColorLight,
   noteFontSize: 14,
 

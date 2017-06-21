@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import {connect} from 'react-redux';
+import {NavigationActions} from 'react-navigation';
 import { Fab, Button, Container, Content } from 'native-base';
 import FAB from 'react-native-fab'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -147,7 +148,7 @@ class Calendar extends Component {
         <FAB
           buttonColor="#09bdac"
           iconTextColor="#FFFFFF"
-          onClickAction={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: true })}
+          onClickAction={() => this.props.dispatch(NavigationActions.navigate({routeName: 'AddEvent'}))}
           visible={!this.state.fabActive}
           iconTextComponent={<Icon name="plus" />}
         />

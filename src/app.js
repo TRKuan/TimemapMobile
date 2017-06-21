@@ -19,30 +19,23 @@ import {StyleProvider, Container, Header, Body, Title} from 'native-base';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 
-import {TabNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
-import Today from './components/Today.js';
-import Calendar from './components/Calendar.js';
-import Settings from './components/Settings.js';
+import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-navigation';
+import Main from './components/Main.js';
 import EventForm from './components/EventForm.js';
+import FormMap from './components/FormMap.js';
 import theme from './theme.js';
 
-const AppNavigator = TabNavigator({
-    Home: {screen: Today},
-    Calendar: {screen: Calendar},
-    Settings: {screen: Settings}
-}, {
-    tabBarPosition: 'top',
-    tabBarOptions: {
-        activeTintColor: theme.themeColorLight,
-        indicatorStyle: {
-            backgroundColor: theme.themeColorLight
-        },
-        style: {
-            backgroundColor: theme.themeColorDark
-        },
-        upperCaseLabel: false
-    },
-    initialRouteName: 'Home'
+const AppNavigator = StackNavigator({
+    Main: {screen: Main},
+    AddEvent: {screen: EventForm},
+    AddEventMap:{screen: FormMap}
+},
+{
+  initialRouteName:'Main',
+  navigationOptions:{
+    headerStyle: {backgroundColor: theme.themeColorDark},
+    headerTintColor: theme.themeColorLight
+  }
 }
 );
 
@@ -50,11 +43,6 @@ class AppWithStyleAndNavigator extends React.Component {
     render() {
         return (
             <Container>
-                <Header noShadow={true}>
-                    <Body>
-                        <Title>{this.props.nav.routes[this.props.nav.index].routeName}</Title>
-                    </Body>
-                </Header>
                 <AppNavigator navigation={addNavigationHelpers({
                     dispatch: this.props.dispatch,
                     state: this.props.nav,

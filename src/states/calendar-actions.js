@@ -188,6 +188,7 @@ function setLeaveTimeId(id){
 export function updateLeaveTimeStart() {
     return (dispatch) => {
         dispatch(setLeaveTime());
+        dispatch(clearLeaveTime());
         let id = setInterval(() => {
             dispatch(setLeaveTime());
         }, 60000);

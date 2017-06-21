@@ -1,6 +1,7 @@
-import React, { Component, View, Text } from 'react';
+import React, { Component} from 'react';
 import {
-  StyleSheet
+  StyleSheet,
+  View
 } from 'react-native';
 import Mapbox, { MapView } from 'react-native-mapbox-gl';
 import {connect} from 'react-redux';
@@ -60,6 +61,7 @@ class Map extends Component {
 
     render() {
         return (
+          <View style={this.props.style}>
             <MapView
                 style={styles.map}
                 ref={(map) => {this.map = map;}}
@@ -76,6 +78,7 @@ class Map extends Component {
                 annotations={this.state.annotations}
                 annotationsAreImmutable={true}
             />
+          </View>
         );
     }
 
