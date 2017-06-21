@@ -161,7 +161,7 @@ class Settings extends Component {
                   Welcome,
                 </Text>
                 <View style={styles.avatar}>
-                  <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+                  <Image source={{ uri: user.avatar+'0' }} style={styles.avatarImage} />
                 </View>
                 <Text style={styles.userName}>
                   {user.name}!
