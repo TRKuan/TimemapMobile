@@ -136,7 +136,6 @@ export default class App extends React.Component {
         }, () => {
             store.dispatch(initCalendar());
             store.dispatch(setLoading(false));
-
         });
     }
     render() {
