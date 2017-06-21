@@ -37,12 +37,17 @@ class FormMap extends Component {
         );
     }
     handleSubmite(){
+      let lat, lng;
+      if(this.props.pinPosition){
+        lat = this.props.pinPosition.latitude;
+        lng = this.props.pinPosition.longitude;
+      }
       try{
         this.props.dispatch(addEvent({
           allDay: false,
           location: this.props.eventForm.location,
-          lng: this.props.pinPosition.longitude,
-          lat: this.props.pinPosition.latitude,
+          lng,
+          lat,
           startTs: moment(this.props.eventForm.startTs).toISOString(),
           endTs: moment(this.props.eventForm.endTs).toISOString(),
           title: this.props.eventForm.title,
