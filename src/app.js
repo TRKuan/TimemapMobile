@@ -12,8 +12,10 @@ import {map} from './states/map-reducers.js';
 import {main} from './states/main-client-reducers.js';
 import {todayNextEvent} from './states/today-reducers.js';
 import {eventsForm} from './states/events-form-reducers.js';
+import {loading} from './states/loading-reducers.js';
 
-import {initCalendar, setUserId} from './states/calendar-actions';
+import {initCalendar} from './states/calendar-actions';
+import {setLoading} from './states/loading-actions.js';
 
 import {StyleProvider, Container, Header, Body, Title} from 'native-base';
 import getTheme from '../native-base-theme/components';
@@ -24,7 +26,7 @@ import Main from './components/Main.js';
 import EventForm from './components/EventForm.js';
 import FormMap from './components/FormMap.js';
 import EventsListScreen from './components/EventsListScreen.js';
-import Settings from './components/Settings.js';
+import Login from './components/Login.js';
 import theme from './theme.js';
 
 const AppNavigator = StackNavigator({
@@ -32,7 +34,7 @@ const AppNavigator = StackNavigator({
     AddEvent: {screen: EventForm},
     AddEventMap:{screen: FormMap},
     Events: {screen: EventsListScreen},
-    Login: {screen: Settings}
+    Login: {screen: Login}
 },
 {
   initialRouteName:'Main',
@@ -42,6 +44,37 @@ const AppNavigator = StackNavigator({
   }
 }
 );
+
+class AppWithLoading extends React.Component {
+  render() {
+    if(this.props.loading)
+        return(
+            <View
+              style={{
+                flex:1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+                <View style={{height:"60%", width:"100%"}}/>
+                <View style={{height:"40%", width:"100%", alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      fontSize:16,
+                      color: theme.themeColorLight,
+                    }}>Loading...{"\n"}</Text>
+                    <ProgressBarAndroid style={{width:"70%"}} color={theme.themeColorLight} styleAttr={"Horizontal"} />
+                </View>
+            </View>
+        );
+      return (
+          <AppWithNavState />
+      );
+  }
+}
+const AppWithLoadingState = connect(state => ({
+    loading: state.loading.loading
+}))(AppWithLoading);
 
 class AppWithStyleAndNavigator extends React.Component {
     render() {
@@ -60,9 +93,10 @@ class AppWithStyleAndNavigator extends React.Component {
             const {dispatch, nav} = this.props;
             if (nav.index === 0)
                 return false;
-            dispatch(NavigationActions.back());
+            this.props.dispatch(NavigationActions.back());
             return true;
         });
+        this.props.dispatch(setLoading(false));
     }
 
     componentWillUnmount() {
@@ -72,8 +106,7 @@ class AppWithStyleAndNavigator extends React.Component {
 
 const AppWithNavState = connect(state => ({
     nav: state.nav,
-    userId: state.calendar.userId
-}))(AppWithStyleAndNavigator);
+  }))(AppWithStyleAndNavigator);
 
 // Nav reducer
 const initialState = AppNavigator.router.getStateForAction(NavigationActions.navigate({routeName: 'Today'}));
@@ -89,7 +122,8 @@ const store = createStore(combineReducers({
     main,
     todayNextEvent,
     eventsForm,
-    nav
+    nav,
+    loading
 }),
 undefined,
 compose(applyMiddleware(thunkMiddleware, loggerMiddleware), autoRehydrate()));
@@ -97,41 +131,18 @@ compose(applyMiddleware(thunkMiddleware, loggerMiddleware), autoRehydrate()));
 export default class App extends React.Component {
     constructor(props){
         super(props);
-        this.state = {
-            loading: true
-        };
-        persistStore(store, {storage: AsyncStorage}, () => {
+        persistStore(store, {
+          storage: AsyncStorage,
+          blacklist: [nav, loading]
+        }, () => {
             store.dispatch(initCalendar());
-            this.setState({
-                loading: false
-            });
         });
     }
     render() {
-        if(this.state.loading)
-            return(
-                <View
-                  style={{
-                    flex:1,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                >
-                    <View style={{height:"60%", width:"100%"}}/>
-                    <View style={{height:"40%", width:"100%", alignItems: 'center'}}>
-                      <Text
-                        style={{
-                          fontSize:16,
-                          color: theme.themeColorLight,
-                        }}>Loading...{"\n"}</Text>
-                        <ProgressBarAndroid style={{width:"70%"}} color={theme.themeColorLight} styleAttr={"Horizontal"} />
-                    </View>
-                </View>
-            );
         return (
             <Provider store={store}>
                 <StyleProvider style={getTheme(platform)}>
-                    <AppWithNavState />
+                    <AppWithLoadingState />
                 </StyleProvider>
             </Provider>
         );
