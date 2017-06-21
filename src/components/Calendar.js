@@ -71,23 +71,24 @@ class Calendar extends Component {
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
-    let tempMarked = JSON.stringify(this.props.monthHasEvent);
-    tempMarked = JSON.parse(tempMarked);
-    if(tempMarked[day.dateString]){
-      if(tempMarked[day.dateString]['marked']){
-        tempMarked[day.dateString] = {marked: true, selected: true};
+    this.props.dispatch(NavigationActions.navigate({routeName: 'Events'}));
+    setTimeout(() => {
+      this.props.dispatch(setDay(day.dateString));
+      let tempMarked = JSON.stringify(this.props.monthHasEvent);
+      tempMarked = JSON.parse(tempMarked);
+      if(tempMarked[day.dateString]){
+        if(tempMarked[day.dateString]['marked']){
+          tempMarked[day.dateString] = {marked: true, selected: true};
+        }
       }
-    }
-    else{
-      tempMarked[day.dateString] = {selected: true};
-    }
-    this.setState({
-      selected: day.dateString,
-      markedDays: tempMarked
-    });
-    this.props.dispatch(setDay(day.dateString)).then(()=>{
-      this.showEventModal();
-    });
+      else{
+        tempMarked[day.dateString] = {selected: true};
+      }
+      this.setState({
+        selected: day.dateString,
+        markedDays: tempMarked
+      });
+    }, 1);
   }
 
 
