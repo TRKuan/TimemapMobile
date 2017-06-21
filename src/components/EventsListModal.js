@@ -18,24 +18,12 @@ import EventItem from './EventItem.js';
 class EventsListModal extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      offset: 0,
-      eventHeaderDate: 'Na'
-    }
-
-  }
-  componentWillMount(){
-    const date = this.props.date;
-    const dateString = moment(date).format('MMMM D,   YYYY');
-    console.log(dateString);
-    this.setState({
-      eventHeaderDate: dateString
-    });
   }
 
   render() {
     const events = this.props.dayEvents;
+    const pickedDay = moment(this.props.pickedDay).format('MMMM D,   YYYY');
+    console.log(pickedDay);
     let children = (
         <View style={styles.empty}>
             <Text style={styles.darkColorText}>No Events. Time to relax!</Text>
@@ -56,7 +44,7 @@ class EventsListModal extends Component {
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
                 <Text style={styles.eventsText}>Events</Text>
-                <Text style={styles.dayHeaderText}>{this.state.eventHeaderDate}</Text>
+                <Text style={styles.dayHeaderText}>{pickedDay}</Text>
               </View>
               <View style={{ justifyContent: 'center', marginRight: 15}}>
                 <TouchableOpacity onPress={() => this.setState({isModalVisible: false})}>
@@ -83,7 +71,7 @@ class EventsListModal extends Component {
           <View style={styles.dayHeader}>
             <View>
               <Text style={styles.eventsText}>Events</Text>
-              <Text style={styles.dayHeaderText}>{this.state.eventHeaderDate}</Text>
+              <Text style={styles.dayHeaderText}>{pickedDay}</Text>
             </View>
           </View>
         </View>
@@ -156,5 +144,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(state => ({
-    dayEvents: state.calendar.dayEvents
+    dayEvents: state.calendar.dayEvents,
+    pickedDay: state.calendar.pickedDay,
+
 }))(EventsListModal);

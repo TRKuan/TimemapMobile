@@ -11,7 +11,7 @@ import {NavigationActions} from 'react-navigation';
 import { Fab, Button, Container, Content } from 'native-base';
 import FAB from 'react-native-fab'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {setDay} from '../states/calendar-actions.js'
+import {setDay, calculateMonthHasEvent} from '../states/calendar-actions.js'
 
 //import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -40,14 +40,29 @@ class Calendar extends Component {
   }
 
   componentDidMount(){
-
-    let tempMarked = JSON.stringify(this.props.monthHasEvent);
-    tempMarked = JSON.parse(tempMarked);
-    this.setState({
-      markedDays: tempMarked
+    this.props.dispatch(setDay('2017-06-22')).then(()=>{
+      let tempMarked = JSON.stringify(this.props.monthHasEvent);
+      tempMarked = JSON.parse(tempMarked);
+      console.log("Did mount",this.state.markedDays);
+      this.setState({
+        markedDays: tempMarked
+      });
     });
-    this.props.dispatch(setDay(this.state.selected));
+
   }
+
+  componentWillReceiveProps(){
+    console.log("monthHasEvent", this.props.monthHasEvent);
+    console.log("markedDays",this.state.markedDays);
+    if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
+      let tempMarked = JSON.stringify(this.props.monthHasEvent);
+      tempMarked = JSON.parse(tempMarked);
+      this.setState({
+        markedDays: tempMarked
+      });
+    }
+  }
+
 
   showEventModal = () => this.setState({ isEventModalVisible: true })
   hideEventModal = () => this.setState({ isEventModalVisible: false })
@@ -55,7 +70,6 @@ class Calendar extends Component {
   onDayPress(day) {
     let tempMarked = JSON.stringify(this.props.monthHasEvent);
     tempMarked = JSON.parse(tempMarked);
-
     if(tempMarked[day.dateString]){
       if(tempMarked[day.dateString]['marked']){
         tempMarked[day.dateString] = {marked: true, selected: true};
@@ -71,8 +85,6 @@ class Calendar extends Component {
     this.props.dispatch(setDay(day.dateString)).then(()=>{
       this.showEventModal();
     });
-
-
   }
 
   onPressFab = () => {
@@ -140,11 +152,6 @@ class Calendar extends Component {
             </Button>
           </View>
         </Modal>
-        <SnackBar
-          visible={this.props.getDayLoading}
-          textMessage="Loading..."
-          actionHandler={()=>{console.log("snackbar button clicked!")}}
-          actionText="Cancel"/>
         <FAB
           buttonColor="#09bdac"
           iconTextColor="#FFFFFF"
@@ -152,6 +159,11 @@ class Calendar extends Component {
           visible={!this.state.fabActive}
           iconTextComponent={<Icon name="plus" />}
         />
+        <SnackBar
+          visible={this.props.getDayLoading}
+          textMessage="Loading..."
+          actionHandler={()=>{console.log("snackbar button clicked!")}}
+          actionText="Cancel"/>
       </View>
 
     );
@@ -168,7 +180,7 @@ class Calendar extends Component {
           modalDidOpen={() => console.log('modal did open')}
           modalDidClose={this.hideEventModal}
           modalStyle={{padding: 0, borderRadius: 5}}>
-            <EventsListModal date={this.state.selected}/>
+            <EventsListScreen/>
           </Modal>
           <Modal
           offset={this.state.offset}
