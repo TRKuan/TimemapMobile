@@ -52,6 +52,14 @@ class Calendar extends Component {
     if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
+      if(tempMarked[this.state.selected]){
+        if(tempMarked[this.state.selected]['marked']){
+          tempMarked[this.state.selected] = {marked: true, selected: true};
+        }
+      }
+      else{
+        tempMarked[this.state.selected] = {selected: true};
+      }
       this.setState({
         markedDays: tempMarked
       });
@@ -104,7 +112,6 @@ class Calendar extends Component {
           arrowColor: '#17dfab',
           monthTextColor: '#17dfab'
         }}
-
         onVisibleMonthsChange={(months) => {console.log('now these months are visible', months);}}
         onDayPress={this.onDayPress}
         style={styles.calendar}
@@ -163,7 +170,6 @@ class Calendar extends Component {
           actionHandler={()=>{console.log("snackbar button clicked!")}}
           />
       </View>
-
     );
   }
 }
