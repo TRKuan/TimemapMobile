@@ -6,6 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 
+import moment from 'moment';
 import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
 import { Fab, Button, Container, Content } from 'native-base';
@@ -20,7 +21,9 @@ import {CalendarList} from 'react-native-calendars';
 import EventsListModal from './EventsListModal.js';
 import EventsListScreen from './EventsListScreen.js';
 import NewEventModal from './NewEventModal.js';
-import SnackBar from 'react-native-snackbar-component'
+import SnackBar from 'react-native-snackbar-component';
+import PushContoller from './PushContoller.js';
+import PushNotification from 'react-native-push-notification';
 
 class Calendar extends Component {
   static navigationOptions = {
@@ -30,7 +33,7 @@ class Calendar extends Component {
     super(props);
 
     this.state = {
-      selected: '2017-06-21',
+      selected: moment().format('YYYY-MM-DD'),
       isEventModalVisible: false,
       fabActive: false,
       markedDays: {}
@@ -38,28 +41,20 @@ class Calendar extends Component {
     this.onDayPress = this.onDayPress.bind(this);
   }
   componentDidMount(){
-    this.props.dispatch(setDay('2017-06-22')).then(()=>{
+    const today = moment().format('YYYY-MM-DD');
+    this.props.dispatch(setDay(today)).then(()=>{
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
       this.setState({
         markedDays: tempMarked
       });
     });
-
   }
 
   componentWillReceiveProps(){
     if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
-      if(tempMarked[this.state.selected]){
-        if(tempMarked[this.state.selected]['marked']){
-          tempMarked[this.state.selected] = {marked: true, selected: true};
-        }
-      }
-      else{
-        tempMarked[this.state.selected] = {selected: true};
-      }
       this.setState({
         markedDays: tempMarked
       });
@@ -73,6 +68,25 @@ class Calendar extends Component {
   onDayPress(day) {
     this.props.dispatch(NavigationActions.navigate({routeName: 'Events'}));
     this.props.dispatch(setDay(day.dateString));
+    /*----Push Notification Test----------*/
+
+    PushNotification.localNotification({
+        /* iOS and Android properties */
+        title: "Timemap Reminder",
+        message: "Leave in 5 mins!",
+        playSound: true,
+        soundName: 'default',
+        /* Android Only Properties */
+        autoCancel: true, // (optional) default: true
+        subText: "Timemap 關心您", // (optional) default: none
+        color: "red", // (optional) default: system default
+        vibrate: true, // (optional) default: true
+        vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+
+
+
+    });
+
   }
 
 
@@ -152,6 +166,7 @@ class Calendar extends Component {
           textMessage="Loading..."
           actionHandler={()=>{console.log("snackbar button clicked!")}}
           />
+          <PushContoller />
       </View>
     );
   }

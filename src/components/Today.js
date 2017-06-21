@@ -10,6 +10,9 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import theme from '../theme.js';
 
+import PushContoller from './PushContoller.js';
+import PushNotification from 'react-native-push-notification';
+
 class Today extends Component {
     static navigationOptions = {
       tabBarLabel: 'Home'
@@ -37,6 +40,7 @@ class Today extends Component {
             <View style={{height:"45%", width:"100%"}}>
               <Map pinable={false} showNextEvent={true}/>
             </View>
+            <PushContoller />
           </View>
         );
     }
