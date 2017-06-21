@@ -160,7 +160,10 @@ export function calculateMonthHasEvent() {
                 hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
                 time.add(1, 'day');
             }
-            hasEvent[`${moment().format("YYYY-MM-DD")}`].selected = true;
+            if(hasEvent[`${moment().format("YYYY-MM-DD")}`])
+              hasEvent[`${moment().format("YYYY-MM-DD")}`].selected = true;
+            else
+              hasEvent[`${moment().format("YYYY-MM-DD")}`]={selected : true};
         }
         dispatch(setMonthHasEvent(hasEvent));
     };
