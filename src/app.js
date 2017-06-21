@@ -96,7 +96,6 @@ class AppWithStyleAndNavigator extends React.Component {
             this.props.dispatch(NavigationActions.back());
             return true;
         });
-        this.props.dispatch(setLoading(false));
     }
 
     componentWillUnmount() {
@@ -136,6 +135,7 @@ export default class App extends React.Component {
           blacklist: [nav, loading]
         }, () => {
             store.dispatch(initCalendar());
+            store.dispatch(setLoading(false));
         });
     }
     render() {

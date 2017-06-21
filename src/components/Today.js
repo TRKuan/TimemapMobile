@@ -13,6 +13,8 @@ import theme from '../theme.js';
 import PushContoller from './PushContoller.js';
 import PushNotification from 'react-native-push-notification';
 
+import {updateLeaveTimeStart} from '../states/calendar-actions.js';
+
 const backgroundColors= {normal: theme.themeColorDark, ok: '#17dfab', leave: '#fe003d'};
 
 var leaveTimeInterval = null;
@@ -26,12 +28,14 @@ class Today extends Component {
 
       this.state = {
         infoBackground: backgroundColors.normal,
-        message: 'Na'
+        message: 'Na',
+        lastNextEvent: 'Na',
+        notified: false
       }
     }
 
     componentDidMount(){
-      leaveTimeInterval = setInterval(this.updateLeaveTime, 240000);
+      leaveTimeInterval = setInterval(this.updateLeaveTime, 1000);
       this.updateLeaveTime();
     }
 
@@ -41,25 +45,51 @@ class Today extends Component {
 
     updateLeaveTime = () => {
       let notifyFlag = false;
-      //console.log(this.props.leaveTime);
-      //console.log(this.props.nextEvent);
+
       let m = this.state.message;
       let ibc = this.state.infoBackground;
+      let n = this.state.notified;
+      let last = this.state.lastNextEvent;
 
+      if(this.state.lastNextEvent !== this.props.eventId){
+        last = this.props.eventId;
+        n = false;
+        ibc = backgroundColors.normal;
+        m= 'Na';
+      }
+      if(this.props.leaveTime < 300 && !n){
+        let intTime = parseInt(this.props.leaveTime/60);
+        m = `Leave in ${intTime} min(s).`;
+        if(this.props.leaveTime <= 0){
+          m = `Should leave already.`;
+        }
+        ibc = backgroundColors.leave;
+        n = true;
+        notifyFlag = true;
+      }
+      this.setState({
+        infoBackground: ibc,
+        message : m,
+        notified: n,
+        lastNextEvent: last
+      },()=>{
+        if(notifyFlag){
+          this.notify();
+        }
+      });
+
+      /**
       if(this.props.leaveTime >= 60 ){
-        let intTime = parseInt(this.props.leaveTime);
-        m = `Leave in ${intTime} mins.`;
+        let intTime = parseInt(this.props.leaveTime/60);
+        m = `Leave in ${intTime} min(s).`;
       }else if(this.props.leaveTime < 60){
         m = 'Leave Right NOW!';
       }
 
       if(this.props.leaveTime <= 300){
         ibc = backgroundColors.leave;
-        notifyFlag = true;
       }else if(this.props.leaveTime <= -900){
-        notifyFlag = false;
       }
-
       this.setState({
         infoBackground: ibc,
         message : m
@@ -68,6 +98,8 @@ class Today extends Component {
           this.notify();
         }
       });
+      */
+
     }
     notify = () =>{
       /*----Push Notification Test----------*/

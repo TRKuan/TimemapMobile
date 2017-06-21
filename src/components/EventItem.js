@@ -43,7 +43,7 @@ export default class EventItem extends Component {
           <View style={styles.item}>
             <View style={styles.eventName}><Text style={styles.darkColorText}>{this.props.title}</Text></View>
             <View style={styles.eventTime}><Text style={styles.darkColorText}>{startTime}</Text></View>
-            <View style={styles.eventLocation}><Text style={styles.darkColorText}>{'Location'}</Text></View>
+            <View style={styles.eventLocation}><Text style={styles.darkColorText}>{this.props.location}</Text></View>
           </View>
         </Swipeable>
       </View>
