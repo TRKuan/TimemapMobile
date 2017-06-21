@@ -71,8 +71,8 @@ class Calendar extends Component {
   hideEventModal = () => this.setState({ isEventModalVisible: false })
 
   onDayPress(day) {
-    this.props.dispatch(NavigationActions.navigate({routeName: 'AddEvent'}));
-    this.props.dispatch(setDay(day.dateString));  
+    this.props.dispatch(NavigationActions.navigate({routeName: 'Events'}));
+    this.props.dispatch(setDay(day.dateString));
   }
 
 
