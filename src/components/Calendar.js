@@ -11,7 +11,7 @@ import {NavigationActions} from 'react-navigation';
 import { Fab, Button, Container, Content } from 'native-base';
 import FAB from 'react-native-fab'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {setDay} from '../states/calendar-actions.js'
+import {setDay, calculateMonthHasEvent} from '../states/calendar-actions.js'
 
 //import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -40,14 +40,20 @@ class Calendar extends Component {
   }
 
   componentDidMount(){
-    let tempMarked = JSON.stringify(this.props.monthHasEvent);
-    tempMarked = JSON.parse(tempMarked);
-    this.setState({
-      markedDays: tempMarked
+    this.props.dispatch(setDay('2017-06-22')).then(()=>{
+      let tempMarked = JSON.stringify(this.props.monthHasEvent);
+      tempMarked = JSON.parse(tempMarked);
+      console.log("Did mount",this.state.markedDays);
+      this.setState({
+        markedDays: tempMarked
+      });
     });
+
   }
-  /*
+
   componentWillReceiveProps(){
+    console.log("monthHasEvent", this.props.monthHasEvent);
+    console.log("markedDays",this.state.markedDays);
     if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
@@ -56,7 +62,7 @@ class Calendar extends Component {
       });
     }
   }
-  */
+
 
   showEventModal = () => this.setState({ isEventModalVisible: true })
   hideEventModal = () => this.setState({ isEventModalVisible: false })
