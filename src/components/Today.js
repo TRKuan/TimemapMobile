@@ -57,7 +57,7 @@ class Today extends Component {
         ibc = backgroundColors.normal;
         m= 'Na';
       }
-      if(this.props.leaveTime < 600 && !n){
+      if(this.props.leaveTime < 300 && !n){
         let intTime = parseInt(this.props.leaveTime/60);
         m = `Leave in ${intTime} min(s).`;
         if(this.props.leaveTime <= 0){
