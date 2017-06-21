@@ -9,8 +9,7 @@ export function initCalendar() {
         dispatch(getDayEvents());
         return dispatch(initMap()).then(() => {
             dispatch(getNextEvent());
-        }).
-            then(() => {
+        }).then(() => {
                 dispatch(updateLeaveTimeStart());
             });
     };
@@ -160,10 +159,6 @@ export function calculateMonthHasEvent() {
                 hasEvent[`${time.format("YYYY-MM-DD")}`] = {marked: true};
                 time.add(1, 'day');
             }
-            if(hasEvent[`${moment().format("YYYY-MM-DD")}`])
-              hasEvent[`${moment().format("YYYY-MM-DD")}`].selected = true;
-            else
-              hasEvent[`${moment().format("YYYY-MM-DD")}`]={selected : true};
         }
         dispatch(setMonthHasEvent(hasEvent));
     };
@@ -190,6 +185,7 @@ function setLeaveTimeId(id){
 }
 
 export function updateLeaveTimeStart() {
+
     return (dispatch) => {
         dispatch(clearLeaveTime());
         dispatch(setLeaveTime());
