@@ -60,6 +60,9 @@ class Today extends Component {
       if(this.props.leaveTime < 600 && !n){
         let intTime = parseInt(this.props.leaveTime/60);
         m = `Leave in ${intTime} min(s).`;
+        if(this.props.leaveTime <= 0){
+          m = `Should leave already.`;
+        }
         ibc = backgroundColors.leave;
         n = true;
         notifyFlag = true;
