@@ -22,7 +22,6 @@ import EventsListScreen from './EventsListScreen.js';
 import NewEventModal from './NewEventModal.js';
 import SnackBar from 'react-native-snackbar-component'
 
-
 class Calendar extends Component {
   static navigationOptions = {
     tabBarLabel: 'Calendar'
@@ -38,12 +37,10 @@ class Calendar extends Component {
     }
     this.onDayPress = this.onDayPress.bind(this);
   }
-
   componentDidMount(){
     this.props.dispatch(setDay('2017-06-22')).then(()=>{
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
-      console.log("Did mount",this.state.markedDays);
       this.setState({
         markedDays: tempMarked
       });
@@ -52,8 +49,6 @@ class Calendar extends Component {
   }
 
   componentWillReceiveProps(){
-    console.log("monthHasEvent", this.props.monthHasEvent);
-    console.log("markedDays",this.state.markedDays);
     if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
       let tempMarked = JSON.stringify(this.props.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
@@ -116,57 +111,6 @@ class Calendar extends Component {
         markedDates={this.state.markedDays}
       />
     );
-    const tempFull= (
-      <View style={{ flex: 1, backgroundColor: '#fff'}}>
-        {calendarList}
-        <Modal
-        offset={this.state.offset}
-        animationDuration={600}
-        animationTension={30}
-        overlayBackground={'rgba(0, 0, 0, 0.6)'}
-        open={this.state.isEventModalVisible}
-        modalDidOpen={() => console.log('modal did open')}
-        modalDidClose={this.hideEventModal}
-        modalStyle={{padding: 0, borderRadius: 5}}>
-          <EventsListModal date={this.state.selected}/>
-        </Modal>
-        <Modal
-        offset={this.state.offset}
-        animationDuration={600}
-        animationTension={30}
-        overlayBackground={'rgba(0, 0, 0, 0.6)'}
-        open={this.state.isAddModalVisible}
-        modalDidOpen={() => console.log(' add modal did open')}
-        modalDidClose={this.hideAddModal}
-        modalStyle={{padding: 0, borderRadius: 5, margin: 0}}>
-          <View style={{backgroundColor: '#fff', height: 552}}>
-            <View style={{flex: 1}}>
-              <NewEventModal />
-            </View>
-            <Button
-              full
-              style={{backgroundColor: '#09bdac'}}
-              onPress={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: false }) }
-            >
-              <Text style={styles.lightColorText}>Close Modal</Text>
-            </Button>
-          </View>
-        </Modal>
-        <FAB
-          buttonColor="#09bdac"
-          iconTextColor="#FFFFFF"
-          onClickAction={() => this.props.dispatch(NavigationActions.navigate({routeName: 'AddEvent'}))}
-          visible={!this.state.fabActive}
-          iconTextComponent={<Icon name="plus" />}
-        />
-        <SnackBar
-          visible={this.props.getDayLoading}
-          textMessage="Loading..."
-          actionHandler={()=>{console.log("snackbar button clicked!")}}
-          actionText="Cancel"/>
-      </View>
-
-    );
     return (
       <View style={{ flex: 1, backgroundColor: '#fff'}}>
         <View style={{ flex: 1, backgroundColor: '#fff'}}>
@@ -204,24 +148,24 @@ class Calendar extends Component {
               </Button>
             </View>
           </Modal>
-          <SnackBar
-            visible={this.props.getDayLoading}
-            textMessage="Loading..."
-            actionHandler={()=>{console.log("snackbar button clicked!")}}
-            actionText="Cancel"/>
           <FAB
             buttonColor="#09bdac"
             iconTextColor="#FFFFFF"
-            onClickAction={() => this.setState({ fabActive: !this.state.fabActive, isAddModalVisible: true })}
+            onClickAction={() => this.props.dispatch(NavigationActions.navigate({routeName: 'AddEvent'}))}
             visible={!this.state.fabActive}
             iconTextComponent={<Icon name="plus" />}
           />
         </View>
+        <SnackBar
+          visible={this.props.getDayLoading}
+          backgroundColor='rgba(38, 38, 38, 0.6)'
+          textMessage="Loading..."
+          actionHandler={()=>{console.log("snackbar button clicked!")}}
+          />
       </View>
 
     );
   }
-
 }
 
 const styles = StyleSheet.create({
