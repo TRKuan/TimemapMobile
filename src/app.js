@@ -23,12 +23,16 @@ import {StackNavigator, NavigationActions, addNavigationHelpers} from 'react-nav
 import Main from './components/Main.js';
 import EventForm from './components/EventForm.js';
 import FormMap from './components/FormMap.js';
+import EventsListScreen from './components/EventsListScreen.js';
+import Settings from './components/Settings.js';
 import theme from './theme.js';
 
 const AppNavigator = StackNavigator({
     Main: {screen: Main},
     AddEvent: {screen: EventForm},
-    AddEventMap:{screen: FormMap}
+    AddEventMap:{screen: FormMap},
+    Events: {screen: EventsListScreen},
+    Login: {screen: Settings}
 },
 {
   initialRouteName:'Main',
@@ -67,7 +71,8 @@ class AppWithStyleAndNavigator extends React.Component {
 }
 
 const AppWithNavState = connect(state => ({
-    nav: state.nav
+    nav: state.nav,
+    userId: state.calendar.userId
 }))(AppWithStyleAndNavigator);
 
 // Nav reducer
@@ -97,7 +102,6 @@ export default class App extends React.Component {
         };
         persistStore(store, {storage: AsyncStorage}, () => {
             store.dispatch(initCalendar());
-            //store.dispatch(setUserId('b2be9269-aa0d-4e0d-9b51-bf17c86a867a'));
             this.setState({
                 loading: false
             });
@@ -127,7 +131,7 @@ export default class App extends React.Component {
         return (
             <Provider store={store}>
                 <StyleProvider style={getTheme(platform)}>
-                    <AppWithNavState/>
+                    <AppWithNavState />
                 </StyleProvider>
             </Provider>
         );
