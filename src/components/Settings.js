@@ -49,6 +49,8 @@ class Settings extends Component {
       user: JSON.parse(decodeURI(user_string))
     }, () => {
       this.props.dispatch(setUserId(this.state.id));
+      if(this.props.onUserIdChanged)
+        this.props.onUserIdChanged(this.state.id);
     });
 
     if (Platform.OS === 'ios') {
@@ -66,6 +68,8 @@ class Settings extends Component {
     user: undefined
   }, () => {
     this.props.dispatch(setUserId("no user"));
+    if(this.props.onUserIdChanged)
+      this.props.onUserIdChanged(this.state.id);
   });
 
   // Open URL in a browser
