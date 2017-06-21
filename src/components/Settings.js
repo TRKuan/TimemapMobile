@@ -90,7 +90,7 @@ class Settings extends Component {
               </View>
               <Text style={styles.text}>
                 Please log in to continue {'\n'}
-                to the awesomness
+                to the Timemap
               </Text>
             </View>
           </View>
