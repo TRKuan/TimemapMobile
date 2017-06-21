@@ -41,7 +41,7 @@ class EventForm extends Component {
               <Form>
                 <Item style={{margin: 10}} floatingLabel>
                   <Label>Title</Label>
-                  <Input onChange={(e) => this.setState({title: e.nativeEvent.text})}/>
+                  <Input value={this.state.title} onChange={(e) => this.setState({title: e.nativeEvent.text})}/>
                 </Item>
 
                 <View style={{margin: 10}}>
@@ -98,12 +98,12 @@ class EventForm extends Component {
 
                 <Item style={{margin: 10}} floatingLabel>
                   <Label>Description</Label>
-                  <Input onChange={(e) => this.setState({description: e.nativeEvent.text})}/>
+                  <Input value={this.state.description} onChange={(e) => this.setState({description: e.nativeEvent.text})}/>
                 </Item>
 
                 <Item style={{margin: 10}} floatingLabel>
                   <Label>Location</Label>
-                  <Input onChange={(e) => this.setState({location: e.nativeEvent.text})}/>
+                  <Input value={this.state.location} onChange={(e) => this.setState({location: e.nativeEvent.text})}/>
                 </Item>
               </Form>
               <Button style={{margin: 50}} block primary onPress={() => this.props.navigation.navigate('AddEventMap')}>
