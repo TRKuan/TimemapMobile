@@ -44,7 +44,7 @@ class Map extends Component {
         if(this.props.showNextEvent&&nextProps.nextEvent!=this.props.nextEvent){
             this.updateNextEventMarker(nextProps.nextEvent);
         }
-        if(this.props.currentPosition&&nextProps.nextEvent)
+        if(this.props.showNextEvent&&this.props.currentPosition&&nextProps.nextEvent&&nextProps.nextEvent!=this.props.nextEvent)
             if(nextProps.nextEvent.lat)
                 this.map.setVisibleCoordinateBounds(
                     Math.min(this.props.currentPosition.latitude, nextProps.nextEvent.lat),
@@ -67,10 +67,10 @@ class Map extends Component {
                 ref={(map) => {this.map = map;}}
                 initialZoomLevel={14}
                 initialCenterCoordinate={{latitude: 24.79567369463787, longitude: 120.9917471227813}}
-                rotateEnabled={this.props.pinable}
+                rotateEnabled={false}
                 scrollEnabled={this.props.pinable}
                 zoomEnabled={this.props.pinable}
-                pitchEnabled={this.props.pinable}
+                pitchEnabled={false}
                 showsUserLocation={true}
                 userTrackingMode={Mapbox.userTrackingMode.none}
                 logoIsHidden={true}
