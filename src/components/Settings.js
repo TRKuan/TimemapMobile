@@ -154,6 +154,7 @@ class Settings extends Component {
         </View>
         )
       }else {
+        //if you have trouble about user's image, delete "+'0'" .
         return(
           <View style={{flex: 1, backgroundColor: theme.themeColorDark}}>
             <View style={styles.topPanelAfter}>
@@ -161,7 +162,7 @@ class Settings extends Component {
                   Welcome,
                 </Text>
                 <View style={styles.avatar}>
-                  <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+                  <Image source={{ uri: user.avatar+'0' }} style={styles.avatarImage} />
                 </View>
                 <Text style={styles.userName}>
                   {user.name}!
