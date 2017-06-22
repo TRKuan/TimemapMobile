@@ -50,7 +50,7 @@ class Today extends Component {
       let ibc = this.state.infoBackground;
       let n = this.state.notified;
       let last = this.state.lastNextEvent;
-      if(Number.isNaN(this.props.leaveTime)||!this.props.leaveTime){
+      if(Number.isNaN(this.props.leaveTime)||!this.props.leaveTime||!this.props.nextEvent){
         this.setState({
           infoBackground: backgroundColors.normal,
           message: 'Na',
@@ -171,5 +171,6 @@ const styles = StyleSheet.create({
 
 export default connect((state, ownProps) => ({
     ...state.calendar.nextEvent,
-    leaveTime: state.calendar.leaveTime
+    leaveTime: state.calendar.leaveTime,
+    nextEvent: state.calendar.nextEvent
 }))(Today);
