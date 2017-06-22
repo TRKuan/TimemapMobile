@@ -71,7 +71,7 @@ class EventForm extends Component {
                         transportation: 'walking',
                       })}
                       selected={this.state.walking} />
-                      <Text>Walking</Text>
+                      <Text>&nbsp;&nbsp;Walking</Text>
                   </ListItem>
                   <ListItem>
                     <Radio
@@ -82,7 +82,7 @@ class EventForm extends Component {
                         transportation: 'driving',
                       })}
                       selected={this.state.driving} />
-                      <Text>Driving</Text>
+                      <Text>&nbsp;&nbsp;Driving</Text>
                   </ListItem>
                   <ListItem>
                     <Radio
@@ -93,7 +93,7 @@ class EventForm extends Component {
                         transportation: 'cycling',
                       })}
                       selected={this.state.cycling} />
-                      <Text>Cycling</Text>
+                      <Text>&nbsp;&nbsp;Cycling</Text>
                   </ListItem>
                 </View>
 
