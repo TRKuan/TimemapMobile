@@ -6,15 +6,23 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native';
+import {connect} from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import Swipeable from 'react-native-swipeable';
 import Swipeout from 'react-native-swipeout';
 
-export default class EventItem extends Component {
+
+
+import {deleteEvent} from '../states/calendar-actions.js';
+
+class EventItem extends Component {
   constructor(props) {
     super(props);
+  }
+  handleDelete = () =>{
+    this.props.dispatch(deleteEvent(this.props.eventId, this.props.day));
   }
 
   render() {
@@ -22,24 +30,15 @@ export default class EventItem extends Component {
     const startTime = moment(this.props.startTs).format('LT');
     const endTime = moment(this.props.endTs).format('LT');
 
-    const eventItem = (
-      <View style={styles.item}>
-        <View style={styles.eventName}><Text style={styles.darkColorText}>{/*this.props.title*/'Title'}</Text></View>
-        <View style={styles.eventTime}><Text style={styles.darkColorText}>{/*startTime*/'Time'}</Text></View>
-        <View style={styles.eventLocation}><Text style={styles.darkColorText}>{/*this.props.location*/'Location'}</Text></View>
-      </View>
-
-    );
-    const leftContent = <Text>Pull to activate</Text>;
 
     const rightButtons = [
-      <TouchableHighlight style={styles.deleteButton}><Text style={styles.lightColorText}><Icon name="times" size={15} /></Text></TouchableHighlight>,
+      <TouchableHighlight style={styles.deleteButton} onPress={this.handleDelete}><Text style={styles.lightColorText}><Icon name="times" size={15} /></Text></TouchableHighlight>,
       <TouchableHighlight style={styles.editButton}><Text style={styles.lightColorText}><Icon name="pencil" size={15} /></Text></TouchableHighlight>
     ];
 
     return (
       <View>
-        <Swipeable leftContent={leftContent} rightButtons={rightButtons}>
+        <Swipeable rightButtons={rightButtons}>
           <View style={styles.item}>
             <View style={styles.eventName}><Text style={styles.darkColorText}>{this.props.title}</Text></View>
             <View style={styles.eventTime}><Text style={styles.darkColorText}>{startTime}</Text></View>
@@ -120,3 +119,6 @@ const styles = StyleSheet.create({
    flex: 1
  }
 });
+export default connect((state, ownProps) => ({
+
+}))(EventItem);

@@ -45,6 +45,20 @@ export function setEvent(event, eventID) {
         return res.json();
     });
 }
+export function deleteEvent(userId, eventId) {
+    let url = `${baseUrl}/deleteevent?userId=${userId}&eventId=${eventId}`;
+    console.log(`Making GET request to: ${url}`);
+
+    return fetch(url, {
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then((res) => {
+        if (res.status !== 200)
+            throw new Error(`Unexpected response code: ${res.status}`);
+        return res.json();
+    });
+}
 
 export function getDay(userId, year, month, day) {
     let startTime = moment({year, month:month-1, day}).format('YYYY-MM-DD ZZ');
