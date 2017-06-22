@@ -23,9 +23,7 @@ class Settings extends Component {
 
 //=================================================================
 //if you have some trouble, you can try delete the code belong
-  state = {
-    user: this.props.user, // user has not logged in yet
-  };
+
 
   // Set up Linking
   componentDidMount() {
@@ -47,17 +45,13 @@ class Settings extends Component {
   handleOpenURL = ({ url }) => {
     // Extract stringified user string out of the URL
     const [, user_string] = url.match(/user=([^#]+)/);
-    this.setState({
-      // Decode the user string and parse it into JSON
-      user: JSON.parse(decodeURI(user_string))
-    }, () => {
-      this.props.dispatch(setUserId(this.state.user.id));
-      this.props.dispatch(setUser(this.state.user));
+
+      this.props.dispatch(setUserId(JSON.parse(decodeURI(user_string)).id));
+      this.props.dispatch(setUser(JSON.parse(decodeURI(user_string))));
       this.props.dispatch(initCalendar());
       if(this.props.onUserIdChanged){
-        this.props.onUserIdChanged(this.state.user.id);
+        this.props.onUserIdChanged(JSON.parse(decodeURI(user_string)).id);
       }
-    });
 
     if (Platform.OS === 'ios') {
       SafariView.dismiss();
@@ -88,7 +82,7 @@ class Settings extends Component {
 //=============================================================================
 
   render() {
-    const { user } = this.state;
+    const { user } = this.props;
 
     if(!user||user.id==='no user'){
       return(

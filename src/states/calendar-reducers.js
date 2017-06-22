@@ -14,7 +14,7 @@ const initCalendarState = {
     notified: false,
     getDayLoading: false,
     deleteLoading: false,
-    user: {},
+    user: {id: "no user"},
 };
 
 export function calendar(state = initCalendarState, action) {
