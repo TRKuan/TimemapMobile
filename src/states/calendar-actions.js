@@ -246,8 +246,7 @@ export function deleteEvent(eventId, day) {
         return deleteEventFromAPI(userId, eventId).then(() => {
             dispatch(setDay(day));
             dispatch(deleteEventEnd());
-            dispatch(updateNextEvent());
-            dispatch(calculateMonthHasEvent());
+            dispatch(initCalendar());
         }).
         catch((err) => {
             console.error("Can't delete event.", err.message);
