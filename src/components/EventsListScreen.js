@@ -12,6 +12,8 @@ import {
 import {connect} from 'react-redux';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import SnackBar from 'react-native-snackbar-component';
+
 import {getDayEvents} from '../states/calendar-actions';
 import EventItem from './EventItem.js';
 
@@ -35,7 +37,7 @@ class EventsListScreen extends Component {
     if(events){
         if (events.length) {
             children = events.map((e, i) => (
-                  <EventItem key={i} {...e}/>
+                  <EventItem key={i} day={this.props.pickedDay} {...e}/>
             ));
         }
     }
@@ -79,6 +81,12 @@ class EventsListScreen extends Component {
         <ScrollView style={{height: '83.5%', padding: 5, paddingTop: 10, backgroundColor: 'rgb(238, 232, 232)'}}>
           {children}
         </ScrollView>
+        <SnackBar
+          visible={this.props.deleteLoading}
+          backgroundColor='rgba(38, 38, 38, 0.6)'
+          textMessage="Loading..."
+          actionHandler={()=>{console.log("snackbar button clicked!")}}
+          />
       </View>
     );
   }
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
  dayHeaderText: {
    color: '#fff',
    fontSize: 22,
-   
+
  },
  eventName:{
    flex: 1,
@@ -150,4 +158,5 @@ const styles = StyleSheet.create({
 export default connect(state => ({
     dayEvents: state.calendar.dayEvents,
     pickedDay: state.calendar.pickedDay,
+    deleteLoading: state.calendar.deleteLoading
 }))(EventsListScreen);

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {initMap} from './map-actions.js'
 import {getDirection as getDirectionFormAPI} from '../api/mapboxAPI.js';
-import {getEvent as getEventFromAPI, addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI} from '../api/calendarAPI.js';
+import {getEvent as getEventFromAPI, addEvent as addEventFormAPI, getNextEvent as getNextEventFormAPI, getDay as getDayFormAPI, getMonth as getMonthFormAPI, deleteEvent as deleteEventFromAPI} from '../api/calendarAPI.js';
 
 export function initCalendar() {
     return (dispatch) => {
@@ -225,4 +225,28 @@ export function setUserId(id){
         type: '@CALENDAR/SET_USER_ID',
         id
     }
+}
+
+function deleteEventStart() {
+    return {type: '@CALENDAR/DELETE_EVENT_START'};
+}
+
+function deleteEventEnd() {
+    return {type: '@CALENDAR/DELETE_EVENT_END'};
+}
+
+export function deleteEvent(eventId, day) {
+    return (dispatch, getState) => {
+        dispatch(deleteEventStart());
+        let {userId} = getState().calendar;
+        return deleteEventFromAPI(userId, eventId).then(() => {
+            dispatch(setDay(day));
+            dispatch(deleteEventEnd());
+            dispatch(updateNextEvent());
+            dispatch(calculateMonthHasEvent());
+        }).
+        catch((err) => {
+            console.error("Can't delete event.", err.message);
+        });
+    };
 }

@@ -12,7 +12,8 @@ const initCalendarState = {
     leaveTimeId:0,
     nextBack: 'normal-back',
     notified: false,
-    getDayLoading: false
+    getDayLoading: false,
+    deleteLoading: false
 };
 
 export function calendar(state = initCalendarState, action) {
@@ -138,6 +139,21 @@ export function calendar(state = initCalendarState, action) {
             ...state,
             userId: action.id
         }
+    case '@CALENDAR/DELETE_EVENT_START':
+        return {
+            ...state,
+            deleteLoading: true
+        }
+    case '@CALENDAR/DELETE_EVENT_END':
+        events = state.events.slice();
+        events = events.filter(function(el) {
+          return el.evntId !== action.eventId;
+        });
+        return {
+            ...state,
+            events,
+            deleteLoading: false
+        };
     default:
         return state;
     }
