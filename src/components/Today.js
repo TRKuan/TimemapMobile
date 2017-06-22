@@ -35,7 +35,7 @@ class Today extends Component {
     }
 
     componentDidMount(){
-      leaveTimeInterval = setInterval(this.updateLeaveTime, 1000);
+      leaveTimeInterval = setInterval(this.updateLeaveTime, 30000);
       this.updateLeaveTime();
     }
 
@@ -50,7 +50,15 @@ class Today extends Component {
       let ibc = this.state.infoBackground;
       let n = this.state.notified;
       let last = this.state.lastNextEvent;
-
+      if(Number.isNaN(this.props.leaveTime)||!this.props.leaveTime){
+        this.setState({
+          infoBackground: backgroundColors.normal,
+          message: 'Na',
+          lastNextEvent: 'Na',
+          notified: false
+        });
+        return;
+      }
       if(this.state.lastNextEvent !== this.props.eventId){
         last = this.props.eventId;
         n = false;
@@ -77,28 +85,6 @@ class Today extends Component {
           this.notify();
         }
       });
-
-      /**
-      if(this.props.leaveTime >= 60 ){
-        let intTime = parseInt(this.props.leaveTime/60);
-        m = `Leave in ${intTime} min(s).`;
-      }else if(this.props.leaveTime < 60){
-        m = 'Leave Right NOW!';
-      }
-
-      if(this.props.leaveTime <= 300){
-        ibc = backgroundColors.leave;
-      }else if(this.props.leaveTime <= -900){
-      }
-      this.setState({
-        infoBackground: ibc,
-        message : m
-      },()=>{
-        if(notifyFlag){
-          this.notify();
-        }
-      });
-      */
 
     }
     notify = () =>{

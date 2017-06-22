@@ -88,7 +88,7 @@ class Settings extends Component {
 
     if(!user){
       return(
-        <View style={{flex: 1, backgroundColor: '#F5F5F5'}}>
+        <View style={{flex: 1, backgroundColor: '#F5FCFF'}}>
           <View style={styles.topPanelBefore}>
               <Image
                 source={require('../images/logo512.png')}
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   topPanelAfter: {
     height: '60%',
     justifyContent: 'center',
-    backgroundColor: theme.themeColorLight,
+    backgroundColor: '#F5FCFF',
 
   },
   bottomPanelAfter: {
