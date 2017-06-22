@@ -154,12 +154,14 @@ export function calendar(state = initCalendarState, action) {
             deleteLoading: false
         };
     case '@CALENDAR/RESET_CALENDAR':
+            let hasEvent={};
+            hasEvent[`${moment().format("YYYY-MM-DD")}`] = {selected: true};
         return {
             ...state,
             userId: 'no user',
             events: [],
             pickedDay: moment(),
-            monthHasEvent: {},
+            monthHasEvent: hasEvent,
             nextEvent: null,
             dayEvents: [],
             leaveTime: NaN,
