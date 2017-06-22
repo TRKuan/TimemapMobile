@@ -51,9 +51,9 @@ class Calendar extends Component {
     });
   }
 
-  componentWillReceiveProps(){
-    if(JSON.stringify(this.props.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
-      let tempMarked = JSON.stringify(this.props.monthHasEvent);
+  componentWillReceiveProps(nextProps){
+    if(JSON.stringify(nextProps.monthHasEvent) !== JSON.stringify(this.state.markedDays)){
+      let tempMarked = JSON.stringify(nextProps.monthHasEvent);
       tempMarked = JSON.parse(tempMarked);
       this.setState({
         markedDays: tempMarked
