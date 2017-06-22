@@ -14,7 +14,7 @@ const initCalendarState = {
     notified: false,
     getDayLoading: false,
     deleteLoading: false,
-    user: {}
+    user: {},
 };
 
 export function calendar(state = initCalendarState, action) {
@@ -91,13 +91,11 @@ export function calendar(state = initCalendarState, action) {
     case '@CALENDAR/GET_DAY_EVENTS_START':
         return {
             ...state,
-            getDayLoading: true
         }
     case '@CALENDAR/GET_DAY_EVENTS_END':
         return {
             ...state,
             dayEvents: action.events,
-            getDayLoading: false
         }
     case '@CALENDAR/SET_PICKED_DAY':
         return {
@@ -170,6 +168,11 @@ export function calendar(state = initCalendarState, action) {
         return {
             ...state,
             user: action.user
+        }
+    case '@CALENDAR/SET_GET_DAY_LOADING':
+        return {
+            ...state,
+            getDayLoading: action.loading
         }
     default:
         return state;

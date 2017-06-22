@@ -129,11 +129,14 @@ function getDayEventsEnd(events) {
 export function getDayEvents() {
     return (dispatch, getState) => {
         dispatch(getDayEventsStart());
+        dispatch(setGetDayLoading(true));
         let {userId, pickedDay} = getState().calendar;
         return getDayFormAPI(userId, moment(pickedDay).year(), moment(pickedDay).month() + 1, moment(pickedDay).date()).then((data) => {
+            dispatch(setGetDayLoading(false));
             dispatch(getDayEventsEnd(data));
         }).
         catch((err) => {
+            dispatch(setGetDayLoading(false));
             console.error("Can't get day events", err.message);
         });
     };
@@ -260,4 +263,11 @@ export function setUser(user){
       type: '@CALENDAR/SET_USER',
       user
     };
+}
+
+function setGetDayLoading(loading){
+    return {
+      type: '@CALENDAR/SET_GET_DAY_LOADING',
+      loading
+    }
 }
