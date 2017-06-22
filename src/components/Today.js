@@ -35,7 +35,7 @@ class Today extends Component {
     }
 
     componentDidMount(){
-      leaveTimeInterval = setInterval(this.updateLeaveTime, 30000);
+      leaveTimeInterval = setInterval(this.updateLeaveTime, 1000);
       this.updateLeaveTime();
     }
 
