@@ -86,30 +86,6 @@ class Today extends Component {
         }
       });
 
-<<<<<<< HEAD
-      /**
-      if(this.props.leaveTime >= 60 ){
-        let intTime = parseInt(this.props.leaveTime/60);
-        m = `Leave in ${intTime} min(s).`;
-      }else if(this.props.leaveTime < 60){
-        m = 'Leave Right NOW!';
-      }
-
-      if(this.props.leaveTime <= 300){
-        ibc = backgroundColors.leave;
-      }else if(this.props.leaveTime <= -900){
-      }
-      this.setState({
-        infoBackground: ibc,
-        message : m
-      },()=>{
-        if(notifyFlag){
-          this.notify();
-        }
-      });
-      */
-=======
->>>>>>> 494c00da8158eb9e81eb008899114d9f47620288
     }
     notify = () =>{
       /*----Push Notification Test----------*/
