@@ -12,7 +12,7 @@ import { Button } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {connect} from 'react-redux';
-import {setUserId} from '../states/calendar-actions';
+import {setUserId, initCalendar, setUser, resetCalendar} from '../states/calendar-actions';
 
 import theme from '../theme.js';
 
@@ -24,7 +24,7 @@ class Settings extends Component {
 //=================================================================
 //if you have some trouble, you can try delete the code belong
   state = {
-    user: undefined, // user has not logged in yet
+    user: this.props.user, // user has not logged in yet
   };
 
   // Set up Linking
@@ -52,6 +52,8 @@ class Settings extends Component {
       user: JSON.parse(decodeURI(user_string))
     }, () => {
       this.props.dispatch(setUserId(this.state.user.id));
+      this.props.dispatch(setUser(this.state.user));
+      this.props.dispatch(initCalendar());
       if(this.props.onUserIdChanged){
         this.props.onUserIdChanged(this.state.user.id);
       }
@@ -72,6 +74,8 @@ class Settings extends Component {
     user: undefined
   }, () => {
     this.props.dispatch(setUserId("no user"));
+    this.props.dispatch(setUser({id: "no user"}));
+    this.props.dispatch(resetCalendar());
     if(this.props.onUserIdChanged)
       this.props.onUserIdChanged("no user");
   });
@@ -86,7 +90,7 @@ class Settings extends Component {
   render() {
     const { user } = this.state;
 
-    if(!user){
+    if(!user||user.id==='no user'){
       return(
         <View style={{flex: 1, backgroundColor: '#F5FCFF'}}>
           <View style={styles.topPanelBefore}>
@@ -265,5 +269,5 @@ const styles = StyleSheet.create({
   },
 });
 export default connect((state, ownProps) => ({
-
+    user: state.calendar.user
 }))(Settings);

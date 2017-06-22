@@ -250,3 +250,14 @@ export function deleteEvent(eventId, day) {
         });
     };
 }
+
+export function resetCalendar(){
+    return {type: '@CALENDAR/RESET_CALENDAR'};
+}
+
+export function setUser(user){
+    return {
+      type: '@CALENDAR/SET_USER',
+      user
+    };
+}

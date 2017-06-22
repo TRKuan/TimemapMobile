@@ -13,7 +13,8 @@ const initCalendarState = {
     nextBack: 'normal-back',
     notified: false,
     getDayLoading: false,
-    deleteLoading: false
+    deleteLoading: false,
+    user: {}
 };
 
 export function calendar(state = initCalendarState, action) {
@@ -154,6 +155,22 @@ export function calendar(state = initCalendarState, action) {
             events,
             deleteLoading: false
         };
+    case '@CALENDAR/RESET_CALENDAR':
+        return {
+            ...state,
+            userId: 'no user',
+            events: [],
+            pickedDay: moment(),
+            monthHasEvent: {},
+            nextEvent: null,
+            dayEvents: [],
+            leaveTime: NaN,
+        }
+    case '@CALENDAR/SET_USER':
+        return {
+            ...state,
+            user: action.user
+        }
     default:
         return state;
     }
