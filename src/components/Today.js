@@ -99,7 +99,6 @@ class Today extends Component {
         }
       });
       */
-
     }
     notify = () =>{
       /*----Push Notification Test----------*/
