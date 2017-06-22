@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import {cleanForm} from '../states/events-form-actions';
 import {addEvent} from '../states/calendar-actions';
+import {setPinPosition} from '../states/map-actions';
 import Map from './Map.js';
 import theme from '../theme.js';
 
@@ -42,6 +43,7 @@ class FormMap extends Component {
         lat = this.props.pinPosition.latitude;
         lng = this.props.pinPosition.longitude;
       }
+      this.props.dispatch(setPinPosition(null));
       try{
         this.props.dispatch(addEvent({
           allDay: false,
